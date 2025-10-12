@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { CircleDot, Footprints, Shield, Trophy, GripVertical } from "lucide-react";
+import { Circle, Shirt, Trash2, GripVertical } from "lucide-react";
 
 interface Player {
   id: number;
@@ -18,8 +18,8 @@ interface PlayerStat {
   team: string;
   goals: number;
   assists: number;
+  isGoalkeeper: boolean;
   cleanSheet: boolean;
-  manOfMatch: boolean;
 }
 
 export default function ManagerDashboard() {
@@ -59,8 +59,8 @@ export default function ManagerDashboard() {
           team: 'Black',
           goals: 0,
           assists: 0,
-          cleanSheet: false,
-          manOfMatch: false
+          isGoalkeeper: false,
+          cleanSheet: false
         })));
       }
     } else {
@@ -71,8 +71,8 @@ export default function ManagerDashboard() {
           team: 'White',
           goals: 0,
           assists: 0,
-          cleanSheet: false,
-          manOfMatch: false
+          isGoalkeeper: false,
+          cleanSheet: false
         })));
       }
     }
@@ -112,6 +112,24 @@ export default function ManagerDashboard() {
       }
     });
     return { black, white };
+  };
+
+  const movePlayerToTeam = (playerId: number, team: 'black' | 'white') => {
+    removeFromTeam(playerId);
+    addToTeam(playerId, team);
+  };
+
+  const toggleGoalkeeper = (playerId: number) => {
+    const stat = playerStats.get(playerId);
+    if (stat) {
+      const isGoalkeeper = !stat.isGoalkeeper;
+      updatePlayerStat(playerId, 'isGoalkeeper', isGoalkeeper);
+      if (isGoalkeeper && scores[stat.team.toLowerCase() as 'black' | 'white'] === 0) {
+        updatePlayerStat(playerId, 'cleanSheet', true);
+      } else if (!isGoalkeeper) {
+        updatePlayerStat(playerId, 'cleanSheet', false);
+      }
+    }
   };
 
   const handleDragStart = (playerId: number) => {
@@ -165,10 +183,10 @@ export default function ManagerDashboard() {
   const scores = calculateScores();
 
   return (
-    <div className="flex gap-6">
-      <Card className="w-64 flex-shrink-0">
+    <div className="flex gap-6 bg-[#0a1e3d] min-h-screen p-6">
+      <Card className="w-72 flex-shrink-0 bg-[#0f2847] border-[#1a3a5c]">
         <CardHeader>
-          <CardTitle>Available Players</CardTitle>
+          <CardTitle className="text-[#ffd700]">Available Players</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {availablePlayers.map(player => (
@@ -176,14 +194,28 @@ export default function ManagerDashboard() {
               key={player.id}
               draggable
               onDragStart={() => handleDragStart(player.id)}
-              className="flex items-center gap-2 p-3 bg-secondary rounded-lg cursor-move hover:bg-secondary/80 transition-colors"
+              className="flex items-center gap-2 p-3 bg-[#1a3a5c] rounded-lg cursor-move hover:bg-[#234a6f] transition-colors"
             >
-              <GripVertical className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">{player.name}</span>
+              <GripVertical className="h-4 w-4 text-gray-400" />
+              <span className="font-medium text-white flex-1">{player.name}</span>
+              <button
+                onClick={() => movePlayerToTeam(player.id, 'white')}
+                className="p-1.5 hover:bg-white/20 rounded transition-colors"
+                title="Add to White Team"
+              >
+                <Shirt className="h-4 w-4 text-white" />
+              </button>
+              <button
+                onClick={() => movePlayerToTeam(player.id, 'black')}
+                className="p-1.5 hover:bg-black/40 rounded transition-colors"
+                title="Add to Black Team"
+              >
+                <Shirt className="h-4 w-4 text-black fill-black" />
+              </button>
             </div>
           ))}
           {availablePlayers.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-4">
+            <p className="text-sm text-gray-400 text-center py-4">
               All players assigned
             </p>
           )}
@@ -192,43 +224,53 @@ export default function ManagerDashboard() {
 
       <div className="flex-1 space-y-6">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Manager Dashboard</h1>
-          <p className="text-muted-foreground">Create and manage game results</p>
+          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Manager Dashboard</h1>
+          <p className="text-gray-400">Create and manage game results</p>
         </div>
 
-        <Card>
+        <Card className="bg-[#0f2847] border-[#1a3a5c]">
           <CardHeader>
-            <CardTitle>Game Details</CardTitle>
+            <CardTitle className="text-[#ffd700]">Game Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="date">Game Date</Label>
+              <Label htmlFor="date" className="text-gray-300">Game Date</Label>
               <Input
                 id="date"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
               />
             </div>
           </CardContent>
         </Card>
 
+        <div className="flex items-center justify-center gap-8 py-6">
+          <div className="text-center">
+            <div className="text-sm text-gray-400 mb-2">Black Team</div>
+            <div className="text-6xl font-bold text-white">{scores.black}</div>
+          </div>
+          <div className="text-4xl text-[#ffd700] font-bold">-</div>
+          <div className="text-center">
+            <div className="text-sm text-gray-400 mb-2">White Team</div>
+            <div className="text-6xl font-bold text-white">{scores.white}</div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card 
-            className="border-gray-800"
+            className="bg-[#0f2847] border-[#1a3a5c]"
             onDragOver={handleDragOver}
             onDrop={() => handleDrop('black')}
           >
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Black Team</span>
-                <span className="text-2xl font-bold">{scores.black}</span>
-              </CardTitle>
+              <CardTitle className="text-[#ffd700]">Black Team</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 min-h-[200px]">
+            <CardContent className="space-y-2 min-h-[200px]">
               {blackTeam.length === 0 && (
-                <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Drag players here</p>
+                <div className="flex items-center justify-center h-32 border-2 border-dashed border-[#2a4a6c] rounded-lg">
+                  <p className="text-sm text-gray-400">Drag players here</p>
                 </div>
               )}
 
@@ -238,59 +280,45 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="border border-border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold">{player.name}</span>
-                      <Button
-                        onClick={() => removeFromTeam(playerId)}
-                        variant="ghost"
-                        size="sm"
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => incrementStat(playerId, 'goals')}
-                        className="flex items-center gap-2 p-2 hover:bg-secondary rounded-lg transition-colors"
-                        title="Add goal"
-                      >
-                        <CircleDot className="h-5 w-5" />
-                        <span className="text-sm font-medium">{stat.goals}</span>
-                      </button>
-                      <button
-                        onClick={() => incrementStat(playerId, 'assists')}
-                        className="flex items-center gap-2 p-2 hover:bg-secondary rounded-lg transition-colors"
-                        title="Add assist"
-                      >
-                        <Footprints className="h-5 w-5" />
-                        <span className="text-sm font-medium">{stat.assists}</span>
-                      </button>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`clean-black-${playerId}`}
-                          checked={stat.cleanSheet}
-                          onCheckedChange={(checked) => updatePlayerStat(playerId, 'cleanSheet', checked)}
-                        />
-                        <Label htmlFor={`clean-black-${playerId}`} className="text-xs flex items-center gap-1">
-                          <Shield className="h-3 w-3" />
-                          Clean Sheet
-                        </Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`motm-black-${playerId}`}
-                          checked={stat.manOfMatch}
-                          onCheckedChange={(checked) => updatePlayerStat(playerId, 'manOfMatch', checked)}
-                        />
-                        <Label htmlFor={`motm-black-${playerId}`} className="text-xs flex items-center gap-1">
-                          <Trophy className="h-3 w-3" />
-                          MOTM
-                        </Label>
-                      </div>
-                    </div>
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-3">
+                    <span className="font-medium text-white flex-1">{player.name}</span>
+                    <button
+                      onClick={() => incrementStat(playerId, 'goals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add goal"
+                    >
+                      <Circle className="h-4 w-4 text-white" />
+                      <span className="text-sm font-medium text-white">{stat.goals}</span>
+                    </button>
+                    <button
+                      onClick={() => incrementStat(playerId, 'assists')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add assist"
+                    >
+                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2L8 8h8l-4-6z" />
+                        <ellipse cx="12" cy="20" rx="3" ry="2" />
+                        <path d="M12 8v10" />
+                      </svg>
+                      <span className="text-sm font-medium text-white">{stat.assists}</span>
+                    </button>
+                    <button
+                      onClick={() => toggleGoalkeeper(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Goalkeeper"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+                        <path d="M12 6v12M6 12h12" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => removeFromTeam(playerId)}
+                      className="p-1 hover:bg-red-600/20 rounded transition-colors"
+                      title="Remove"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-400" />
+                    </button>
                   </div>
                 );
               })}
@@ -298,20 +326,17 @@ export default function ManagerDashboard() {
           </Card>
 
           <Card 
-            className="border-gray-200"
+            className="bg-[#0f2847] border-[#1a3a5c]"
             onDragOver={handleDragOver}
             onDrop={() => handleDrop('white')}
           >
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>White Team</span>
-                <span className="text-2xl font-bold">{scores.white}</span>
-              </CardTitle>
+              <CardTitle className="text-[#ffd700]">White Team</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 min-h-[200px]">
+            <CardContent className="space-y-2 min-h-[200px]">
               {whiteTeam.length === 0 && (
-                <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Drag players here</p>
+                <div className="flex items-center justify-center h-32 border-2 border-dashed border-[#2a4a6c] rounded-lg">
+                  <p className="text-sm text-gray-400">Drag players here</p>
                 </div>
               )}
 
@@ -321,59 +346,45 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="border border-border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold">{player.name}</span>
-                      <Button
-                        onClick={() => removeFromTeam(playerId)}
-                        variant="ghost"
-                        size="sm"
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => incrementStat(playerId, 'goals')}
-                        className="flex items-center gap-2 p-2 hover:bg-secondary rounded-lg transition-colors"
-                        title="Add goal"
-                      >
-                        <CircleDot className="h-5 w-5" />
-                        <span className="text-sm font-medium">{stat.goals}</span>
-                      </button>
-                      <button
-                        onClick={() => incrementStat(playerId, 'assists')}
-                        className="flex items-center gap-2 p-2 hover:bg-secondary rounded-lg transition-colors"
-                        title="Add assist"
-                      >
-                        <Footprints className="h-5 w-5" />
-                        <span className="text-sm font-medium">{stat.assists}</span>
-                      </button>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`clean-white-${playerId}`}
-                          checked={stat.cleanSheet}
-                          onCheckedChange={(checked) => updatePlayerStat(playerId, 'cleanSheet', checked)}
-                        />
-                        <Label htmlFor={`clean-white-${playerId}`} className="text-xs flex items-center gap-1">
-                          <Shield className="h-3 w-3" />
-                          Clean Sheet
-                        </Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`motm-white-${playerId}`}
-                          checked={stat.manOfMatch}
-                          onCheckedChange={(checked) => updatePlayerStat(playerId, 'manOfMatch', checked)}
-                        />
-                        <Label htmlFor={`motm-white-${playerId}`} className="text-xs flex items-center gap-1">
-                          <Trophy className="h-3 w-3" />
-                          MOTM
-                        </Label>
-                      </div>
-                    </div>
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-3">
+                    <span className="font-medium text-white flex-1">{player.name}</span>
+                    <button
+                      onClick={() => incrementStat(playerId, 'goals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add goal"
+                    >
+                      <Circle className="h-4 w-4 text-white" />
+                      <span className="text-sm font-medium text-white">{stat.goals}</span>
+                    </button>
+                    <button
+                      onClick={() => incrementStat(playerId, 'assists')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add assist"
+                    >
+                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2L8 8h8l-4-6z" />
+                        <ellipse cx="12" cy="20" rx="3" ry="2" />
+                        <path d="M12 8v10" />
+                      </svg>
+                      <span className="text-sm font-medium text-white">{stat.assists}</span>
+                    </button>
+                    <button
+                      onClick={() => toggleGoalkeeper(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Goalkeeper"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+                        <path d="M12 6v12M6 12h12" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => removeFromTeam(playerId)}
+                      className="p-1 hover:bg-red-600/20 rounded transition-colors"
+                      title="Remove"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-400" />
+                    </button>
                   </div>
                 );
               })}
@@ -383,7 +394,7 @@ export default function ManagerDashboard() {
 
         <Button
           onClick={handleSubmit}
-          className="w-full"
+          className="w-full bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e] font-bold"
           size="lg"
           disabled={blackTeam.length === 0 && whiteTeam.length === 0}
         >
