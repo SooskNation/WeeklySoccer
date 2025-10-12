@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useBackend } from "@/hooks/useBackend";
+import backend from "~backend/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -20,7 +20,6 @@ interface Game {
 }
 
 export default function VotingPage() {
-  const backend = useBackend();
   const [players, setPlayers] = useState<Player[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<number | null>(null);

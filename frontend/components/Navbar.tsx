@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/clerk-react";
-import { Home, BarChart3, Trophy, Vote, Settings } from "lucide-react";
+import { Home, BarChart3, Trophy, Vote, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import backend from "~backend/client";
 
-export default function Navbar() {
-  const { isSignedIn } = useUser();
+interface NavbarProps {
+  onLogout: () => void;
+  userRole: "player" | "manager" | null;
+}
+
+export default function Navbar({ onLogout, userRole }: NavbarProps) {
+  const handleLogout = async () => {
+    try {
+      await backend.auth.logout();
+      onLogout();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <nav className="border-b border-border bg-card">
@@ -32,24 +44,18 @@ export default function Navbar() {
               <Vote className="h-4 w-4" />
               <span className="hidden sm:inline">Vote</span>
             </Link>
-            <Link to="/manager" className="flex items-center gap-2 hover:text-primary transition-colors">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Manager</span>
-            </Link>
+            {userRole === "manager" && (
+              <Link to="/manager" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">Manager</span>
+              </Link>
+            )}
             
             <div className="flex items-center gap-2 ml-4">
-              {isSignedIn ? (
-                <UserButton />
-              ) : (
-                <>
-                  <SignInButton mode="modal">
-                    <Button variant="ghost" size="sm">Login</Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button size="sm">Register</Button>
-                  </SignUpButton>
-                </>
-              )}
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
             </div>
           </div>
         </div>

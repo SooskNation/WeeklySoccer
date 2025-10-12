@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ClerkProvider } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import HomePage from "@/pages/HomePage";
@@ -8,14 +8,47 @@ import PlayerProfilePage from "@/pages/PlayerProfilePage";
 import ManagerDashboard from "@/pages/ManagerDashboard";
 import VotingPage from "@/pages/VotingPage";
 import ResultsPage from "@/pages/ResultsPage";
-
-const PUBLISHABLE_KEY = "pk_test_c3RpcnJpbmctaGFtc3Rlci03Mi5jbGVyay5hY2NvdW50cy5kZXYk";
+import LoginPage from "@/pages/LoginPage";
 
 function AppInner() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<"player" | "manager" | null>(null);
+  const [playerID, setPlayerID] = useState<number | undefined>();
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole") as "player" | "manager" | null;
+    const pid = localStorage.getItem("playerID");
+    if (role) {
+      setIsAuthenticated(true);
+      setUserRole(role);
+      if (pid) setPlayerID(Number(pid));
+    }
+  }, []);
+
+  const handleLogin = (role: "player" | "manager", pid?: number) => {
+    setIsAuthenticated(true);
+    setUserRole(role);
+    setPlayerID(pid);
+    localStorage.setItem("userRole", role);
+    if (pid) localStorage.setItem("playerID", pid.toString());
+  };
+
+  const handleLogout = async () => {
+    setIsAuthenticated(false);
+    setUserRole(null);
+    setPlayerID(undefined);
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("playerID");
+  };
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-background text-foreground dark">
-        <Navbar />
+        <Navbar onLogout={handleLogout} userRole={userRole} />
         <main className="container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -33,9 +66,5 @@ function AppInner() {
 }
 
 export default function App() {
-  return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <AppInner />
-    </ClerkProvider>
-  );
+  return <AppInner />;
 }

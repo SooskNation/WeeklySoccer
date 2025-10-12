@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useBackend } from "@/hooks/useBackend";
+import backend from "~backend/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,6 @@ interface PlayerStat {
 }
 
 export default function ManagerDashboard() {
-  const backend = useBackend();
   const [players, setPlayers] = useState<Player[]>([]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [blackTeam, setBlackTeam] = useState<number[]>([]);

@@ -1,39 +1,48 @@
-import { createClerkClient, verifyToken } from "@clerk/backend";
 import { Header, Cookie, APIError, Gateway } from "encore.dev/api";
 import { authHandler } from "encore.dev/auth";
-import { secret } from "encore.dev/config";
-
-const clerkSecretKey = secret("ClerkSecretKey");
-const clerkClient = createClerkClient({ secretKey: clerkSecretKey() });
+import db from "../db";
 
 interface AuthParams {
-  authorization?: Header<"Authorization">;
   session?: Cookie<"session">;
 }
 
 export interface AuthData {
   userID: string;
-  imageUrl: string;
-  email: string | null;
+  username: string;
+  role: "player" | "manager";
+  playerID: number | null;
 }
 
 export const auth = authHandler<AuthParams, AuthData>(
   async (data) => {
-    const token = data.authorization?.replace("Bearer ", "") ?? data.session?.value;
+    const token = data.session?.value;
     if (!token) {
       throw APIError.unauthenticated("missing token");
     }
 
     try {
-      const verifiedToken = await verifyToken(token, {
-        secretKey: clerkSecretKey(),
-      });
+      const parts = token.split(":");
+      if (parts.length !== 2) {
+        throw APIError.unauthenticated("invalid token format");
+      }
 
-      const user = await clerkClient.users.getUser(verifiedToken.sub);
+      const [username, password] = parts;
+      
+      const user = await db.queryRow`
+        SELECT id, username, role, player_id 
+        FROM users 
+        WHERE username = ${username} AND password = ${password}
+      `;
+
+      if (!user) {
+        throw APIError.unauthenticated("invalid credentials");
+      }
+
       return {
-        userID: user.id,
-        imageUrl: user.imageUrl,
-        email: user.emailAddresses[0]?.emailAddress ?? null,
+        userID: user.id.toString(),
+        username: user.username,
+        role: user.role,
+        playerID: user.player_id,
       };
     } catch (err) {
       throw APIError.unauthenticated("invalid token", err as Error);
