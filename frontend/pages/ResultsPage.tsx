@@ -164,19 +164,27 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/goal-icon.png" alt="Goal" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <circle cx="12" cy="12" r="10" />
+                                          <path d="M12 2a10 10 0 0 1 0 20M2 12h20" />
+                                          <path d="M12 2C6.5 6.5 6.5 17.5 12 22M12 2c5.5 4.5 5.5 15.5 0 20" />
+                                        </svg>
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/assist-icon.png" alt="Assist" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <path d="M3 18c3-2 5-3 8-3 3.5 0 5 2 8 4M8 14L6 6l6 3 6-3-2 8" />
+                                        </svg>
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/goalkeeper-icon.png" alt="Clean Sheet" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <path d="M8 2h8l4 4v4c0 6-4 8-8 12-4-4-8-6-8-12V6z" />
+                                        </svg>
                                         CS
                                       </span>
                                     )}
@@ -204,19 +212,27 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/goal-icon.png" alt="Goal" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <circle cx="12" cy="12" r="10" />
+                                          <path d="M12 2a10 10 0 0 1 0 20M2 12h20" />
+                                          <path d="M12 2C6.5 6.5 6.5 17.5 12 22M12 2c5.5 4.5 5.5 15.5 0 20" />
+                                        </svg>
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/assist-icon.png" alt="Assist" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <path d="M3 18c3-2 5-3 8-3 3.5 0 5 2 8 4M8 14L6 6l6 3 6-3-2 8" />
+                                        </svg>
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/goalkeeper-icon.png" alt="Clean Sheet" className="h-3 w-3" />
+                                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <path d="M8 2h8l4 4v4c0 6-4 8-8 12-4-4-8-6-8-12V6z" />
+                                        </svg>
                                         CS
                                       </span>
                                     )}
