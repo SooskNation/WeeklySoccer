@@ -30,11 +30,11 @@ export const get = api<GetGameParams, Game>(
   async ({ id }) => {
     const game = await db.queryRow<{
       game_id: number;
-      game_date: Date;
+      game_date: string;
       black_score: number;
       white_score: number;
     }>`
-      SELECT game_id, game_date, black_score, white_score
+      SELECT game_id, to_char(game_date, 'YYYY-MM-DD') as game_date, black_score, white_score
       FROM games
       WHERE game_id = ${id}
     `;
@@ -62,7 +62,7 @@ export const get = api<GetGameParams, Game>(
 
     return {
       id: game.game_id,
-      date: game.game_date.toISOString().split('T')[0],
+      date: game.game_date,
       blackScore: game.black_score,
       whiteScore: game.white_score,
       winner: game.black_score > game.white_score ? 'Black' :
