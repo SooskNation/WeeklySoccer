@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import backend from "~backend/client";
+import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CircleDot, Footprints, Shield, Trophy } from "lucide-react";
@@ -45,6 +45,7 @@ export default function StatsPage() {
 
   const loadStats = async () => {
     try {
+      const backend = getAuthenticatedBackend();
       const [leaderboard, scorers, assisters, motm] = await Promise.all([
         backend.stats.leaderboard(),
         backend.stats.topScorers({ limit: 3 }),

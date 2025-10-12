@@ -3,6 +3,7 @@ import { authHandler } from "encore.dev/auth";
 import db from "../db";
 
 interface AuthParams {
+  authorization?: Header<"Authorization">;
   session?: Cookie<"session">;
 }
 
@@ -15,7 +16,10 @@ export interface AuthData {
 
 export const auth = authHandler<AuthParams, AuthData>(
   async (data) => {
-    const token = data.session?.value;
+    let token = data.authorization?.replace("Bearer ", "");
+    if (!token) {
+      token = data.session?.value;
+    }
     if (!token) {
       throw APIError.unauthenticated("missing token");
     }

@@ -8,6 +8,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   session: Cookie<"session">;
+  token: string;
   role: "player" | "manager";
   playerID?: number;
 }
@@ -30,11 +31,13 @@ export const login = api<LoginRequest, LoginResponse>(
     return {
       session: {
         value: token,
-        expires: new Date(Date.now() + 3600 * 24 * 30),
+        expires: new Date(Date.now() + 3600 * 1000 * 24 * 30),
         httpOnly: true,
         secure: true,
-        sameSite: "Lax",
+        sameSite: "None",
+        domain: ".lp.dev",
       },
+      token,
       role: user.role,
       playerID: user.player_id,
     };

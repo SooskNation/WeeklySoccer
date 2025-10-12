@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import backend from "~backend/client";
+import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -35,6 +35,7 @@ export default function VotingPage() {
 
   const loadData = async () => {
     try {
+      const backend = getAuthenticatedBackend();
       const [playersData, gamesData] = await Promise.all([
         backend.players.list(),
         backend.games.list()
@@ -65,6 +66,7 @@ export default function VotingPage() {
     }
 
     try {
+      const backend = getAuthenticatedBackend();
       await backend.votes.submit({
         gameId: selectedGame,
         voterId,

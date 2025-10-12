@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import backend from "~backend/client";
+import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +46,7 @@ export default function PlayerProfilePage() {
   const loadPlayerData = async () => {
     try {
       const playerId = parseInt(id!);
+      const backend = getAuthenticatedBackend();
       const [playerData, statsData] = await Promise.all([
         backend.players.get({ id: playerId }),
         backend.stats.playerStats({ id: playerId })
@@ -67,6 +68,7 @@ export default function PlayerProfilePage() {
 
   const handleUpdate = async () => {
     try {
+      const backend = getAuthenticatedBackend();
       await backend.players.update({
         id: parseInt(id!),
         nickname: nickname || undefined

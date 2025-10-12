@@ -19,7 +19,7 @@ export const list = api<void, ListGamesResponse>(
   async () => {
     const rows = await db.queryAll<{
       game_id: number;
-      game_date: Date;
+      game_date: string;
       black_score: number;
       white_score: number;
     }>`
@@ -30,7 +30,7 @@ export const list = api<void, ListGamesResponse>(
 
     const games = rows.map(row => ({
       id: row.game_id,
-      date: row.game_date.toISOString().split('T')[0],
+      date: row.game_date,
       blackScore: row.black_score,
       whiteScore: row.white_score,
       winner: row.black_score > row.white_score ? 'Black' :

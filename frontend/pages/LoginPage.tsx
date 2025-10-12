@@ -20,6 +20,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
     try {
       const response = await backend.auth.login({ username, password });
+      localStorage.setItem("authToken", response.token);
       onLogin(response.role, response.playerID);
     } catch (err) {
       setError("Invalid credentials");

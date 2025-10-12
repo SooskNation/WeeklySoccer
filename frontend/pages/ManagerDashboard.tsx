@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import backend from "~backend/client";
+import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,7 @@ export default function ManagerDashboard() {
 
   const loadPlayers = async () => {
     try {
+      const backend = getAuthenticatedBackend();
       const response = await backend.players.list();
       setPlayers(response.players);
     } catch (error) {
@@ -160,6 +161,7 @@ export default function ManagerDashboard() {
         return;
       }
       
+      const backend = getAuthenticatedBackend();
       await backend.games.create({
         date,
         blackScore: scores.black,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import backend from "~backend/client";
+import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CircleDot, Footprints, Shield, Trophy, ChevronDown, ChevronUp } from "lucide-react";
@@ -62,6 +62,7 @@ export default function ResultsPage() {
 
   const loadGames = async () => {
     try {
+      const backend = getAuthenticatedBackend();
       const response = await backend.games.list();
       setGames(response.games);
     } catch (error) {
@@ -84,6 +85,7 @@ export default function ResultsPage() {
 
     if (!gameDetails.has(gameId)) {
       try {
+        const backend = getAuthenticatedBackend();
         const [details, votes] = await Promise.all([
           backend.games.get({ id: gameId }),
           backend.votes.allVotes({ gameId })

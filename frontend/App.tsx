@@ -41,6 +41,7 @@ function AppInner() {
     setPlayerID(undefined);
     localStorage.removeItem("userRole");
     localStorage.removeItem("playerID");
+    localStorage.removeItem("authToken");
   };
 
   if (!isAuthenticated) {
