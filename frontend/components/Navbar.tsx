@@ -52,7 +52,7 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
             )}
             
             <div className="flex items-center gap-2 ml-4">
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="cursor-pointer">
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
