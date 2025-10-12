@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { Circle, Shirt, Trash2, GripVertical } from "lucide-react";
+import { Shirt, Trash2, GripVertical } from "lucide-react";
 
 interface Player {
   id: number;
@@ -298,7 +298,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <Circle className="h-4 w-4 text-white" />
+                      <img src="/goal-icon.png" alt="Goal" className="h-4 w-4" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -306,11 +306,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 2L8 8h8l-4-6z" />
-                        <ellipse cx="12" cy="20" rx="3" ry="2" />
-                        <path d="M12 8v10" />
-                      </svg>
+                      <img src="/assist-icon.png" alt="Assist" className="h-4 w-4" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -318,10 +314,7 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
-                        <path d="M12 6v12M6 12h12" />
-                      </svg>
+                      <img src="/goalkeeper-icon.png" alt="Goalkeeper" className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
@@ -364,7 +357,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <Circle className="h-4 w-4 text-white" />
+                      <img src="/goal-icon.png" alt="Goal" className="h-4 w-4" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -372,11 +365,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 2L8 8h8l-4-6z" />
-                        <ellipse cx="12" cy="20" rx="3" ry="2" />
-                        <path d="M12 8v10" />
-                      </svg>
+                      <img src="/assist-icon.png" alt="Assist" className="h-4 w-4" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -384,10 +373,7 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
-                        <path d="M12 6v12M6 12h12" />
-                      </svg>
+                      <img src="/goalkeeper-icon.png" alt="Goalkeeper" className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}

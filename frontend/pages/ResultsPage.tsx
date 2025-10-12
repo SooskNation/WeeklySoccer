@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleDot, Footprints, Shield, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Game {
@@ -164,19 +164,19 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <CircleDot className="h-3 w-3" />
+                                        <img src="/goal-icon.png" alt="Goal" className="h-3 w-3" />
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <Footprints className="h-3 w-3" />
+                                        <img src="/assist-icon.png" alt="Assist" className="h-3 w-3" />
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <Shield className="h-3 w-3" />
+                                        <img src="/goalkeeper-icon.png" alt="Clean Sheet" className="h-3 w-3" />
                                         CS
                                       </span>
                                     )}
@@ -204,19 +204,19 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <CircleDot className="h-3 w-3" />
+                                        <img src="/goal-icon.png" alt="Goal" className="h-3 w-3" />
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <Footprints className="h-3 w-3" />
+                                        <img src="/assist-icon.png" alt="Assist" className="h-3 w-3" />
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <Shield className="h-3 w-3" />
+                                        <img src="/goalkeeper-icon.png" alt="Clean Sheet" className="h-3 w-3" />
                                         CS
                                       </span>
                                     )}
