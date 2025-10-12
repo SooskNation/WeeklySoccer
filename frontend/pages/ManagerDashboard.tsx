@@ -207,21 +207,21 @@ export default function ManagerDashboard() {
               onDragStart={() => handleDragStart(player.id)}
               className="flex items-center gap-2 p-3 bg-[#1a3a5c] rounded-lg cursor-move hover:bg-[#234a6f] transition-colors"
             >
-              <GripVertical className="h-4 w-4 text-gray-400" />
+              <GripVertical className="h-5 w-5 text-gray-400" />
               <span className="font-medium text-white flex-1">{player.name}</span>
               <button
                 onClick={() => movePlayerToTeam(player.id, 'white')}
                 className="p-1.5 hover:bg-white/20 rounded transition-colors"
                 title="Add to White Team"
               >
-                <Shirt className="h-4 w-4 text-white" />
+                <Shirt className="h-5 w-5 text-white" />
               </button>
               <button
                 onClick={() => movePlayerToTeam(player.id, 'black')}
                 className="p-1.5 hover:bg-black/40 rounded transition-colors"
                 title="Add to Black Team"
               >
-                <Shirt className="h-4 w-4 text-black fill-black" />
+                <Shirt className="h-5 w-5 text-black fill-black" />
               </button>
             </div>
           ))}
@@ -298,7 +298,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -306,7 +306,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-4 w-4 object-contain" />
+                      <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -314,14 +314,14 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <img src="/gloves.png" alt="Goalkeeper" className="h-4 w-4 object-contain" />
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
                       className="p-1 hover:bg-red-600/20 rounded transition-colors"
                       title="Remove"
                     >
-                      <Trash2 className="h-4 w-4 text-red-400" />
+                      <Trash2 className="h-5 w-5 text-red-400" />
                     </button>
                   </div>
                 );
@@ -357,7 +357,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -365,7 +365,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-4 w-4 object-contain" />
+                      <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -373,14 +373,14 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <img src="/gloves.png" alt="Goalkeeper" className="h-4 w-4 object-contain" />
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
                       className="p-1 hover:bg-red-600/20 rounded transition-colors"
                       title="Remove"
                     >
-                      <Trash2 className="h-4 w-4 text-red-400" />
+                      <Trash2 className="h-5 w-5 text-red-400" />
                     </button>
                   </div>
                 );

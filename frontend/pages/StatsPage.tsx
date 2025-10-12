@@ -160,7 +160,7 @@ export default function StatsPage() {
                     onClick={() => handleSort('goals')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      <CircleDot className="h-4 w-4" />
+                      <CircleDot className="h-5 w-5" />
                       Goals <SortIcon field="goals" />
                     </div>
                   </TableHead>
@@ -169,7 +169,7 @@ export default function StatsPage() {
                     onClick={() => handleSort('assists')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      <Footprints className="h-4 w-4" />
+                      <Footprints className="h-5 w-5" />
                       Assists <SortIcon field="assists" />
                     </div>
                   </TableHead>
@@ -194,7 +194,7 @@ export default function StatsPage() {
                     onClick={() => handleSort('motm')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      <Trophy className="h-4 w-4" />
+                      <Trophy className="h-5 w-5" />
                       MOTM <SortIcon field="motm" />
                     </div>
                   </TableHead>
@@ -203,7 +203,7 @@ export default function StatsPage() {
                     onClick={() => handleSort('cleanSheets')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      <Shield className="h-4 w-4" />
+                      <Shield className="h-5 w-5" />
                       Clean Sheets <SortIcon field="cleanSheets" />
                     </div>
                   </TableHead>

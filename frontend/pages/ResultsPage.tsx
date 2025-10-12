@@ -164,19 +164,19 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-3 w-3 rounded-full object-cover" />
+                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-3 w-3 object-contain" />
+                                        <img src="/assist.png" alt="Assist" className="h-4 w-4 object-contain" />
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/gloves.png" alt="Clean Sheet" className="h-3 w-3 object-contain" />
+                                        <img src="/gloves.png" alt="Clean Sheet" className="h-4 w-4 object-contain" />
                                         CS
                                       </span>
                                     )}
@@ -204,19 +204,19 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-3 w-3 rounded-full object-cover" />
+                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
                                         {stat.goals}
                                       </span>
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-3 w-3 object-contain" />
+                                        <img src="/assist.png" alt="Assist" className="h-4 w-4 object-contain" />
                                         {stat.assists}
                                       </span>
                                     )}
                                     {stat.cleanSheet && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/gloves.png" alt="Clean Sheet" className="h-3 w-3 object-contain" />
+                                        <img src="/gloves.png" alt="Clean Sheet" className="h-4 w-4 object-contain" />
                                         CS
                                       </span>
                                     )}

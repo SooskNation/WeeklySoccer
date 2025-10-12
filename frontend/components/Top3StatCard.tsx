@@ -21,7 +21,7 @@ export default function Top3StatCard({ title, players, icon: Icon, valueLabel }:
       <Card className="border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          <Icon className="h-4 w-4 text-primary" />
+          <Icon className="h-5 w-5 text-primary" />
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">No data available</p>
