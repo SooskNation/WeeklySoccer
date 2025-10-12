@@ -298,11 +298,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 2a10 10 0 0 1 0 20M2 12h20" />
-                        <path d="M12 2C6.5 6.5 6.5 17.5 12 22M12 2c5.5 4.5 5.5 15.5 0 20" />
-                      </svg>
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -310,9 +306,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 18c3-2 5-3 8-3 3.5 0 5 2 8 4M8 14L6 6l6 3 6-3-2 8" />
-                      </svg>
+                      <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-4 w-4 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -320,9 +314,7 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M8 2h8l4 4v4c0 6-4 8-8 12-4-4-8-6-8-12V6z" />
-                      </svg>
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-4 w-4 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
@@ -365,11 +357,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 2a10 10 0 0 1 0 20M2 12h20" />
-                        <path d="M12 2C6.5 6.5 6.5 17.5 12 22M12 2c5.5 4.5 5.5 15.5 0 20" />
-                      </svg>
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -377,9 +365,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add assist"
                     >
-                      <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 18c3-2 5-3 8-3 3.5 0 5 2 8 4M8 14L6 6l6 3 6-3-2 8" />
-                      </svg>
+                      <img src="https://www.clipartmax.com/png/small/345-3455904_soccer-shoe-vector-soccer-shoe-svg.png" alt="Assist" className="h-4 w-4 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
@@ -387,9 +373,7 @@ export default function ManagerDashboard() {
                       className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
                       title="Goalkeeper"
                     >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M8 2h8l4 4v4c0 6-4 8-8 12-4-4-8-6-8-12V6z" />
-                      </svg>
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-4 w-4 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
