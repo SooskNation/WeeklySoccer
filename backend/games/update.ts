@@ -1,4 +1,5 @@
 import { api, APIError } from "encore.dev/api";
+import { getAuthData } from "~encore/auth";
 import db from "../db";
 
 interface PlayerStat {
@@ -29,6 +30,12 @@ interface Game {
 export const update = api<UpdateGameParams, Game>(
   { auth: true, expose: true, method: "PUT", path: "/games/:id" },
   async ({ id, date, blackScore, whiteScore, stats }) => {
+    const authData = getAuthData();
+    
+    if (authData?.role !== "manager") {
+      throw APIError.permissionDenied("only managers can update game results");
+    }
+
     const existing = await db.queryRow<{ game_id: number }>`
       SELECT game_id FROM games WHERE game_id = ${id}
     `;

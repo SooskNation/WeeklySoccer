@@ -255,6 +255,11 @@ export namespace players {
  */
 import { leaderboard as api_stats_leaderboard_leaderboard } from "~backend/stats/leaderboard";
 import { playerStats as api_stats_player_playerStats } from "~backend/stats/player";
+import {
+    topAssisters as api_stats_top_scorers_topAssisters,
+    topMOTM as api_stats_top_scorers_topMOTM,
+    topScorers as api_stats_top_scorers_topScorers
+} from "~backend/stats/top_scorers";
 
 export namespace stats {
 
@@ -265,6 +270,9 @@ export namespace stats {
             this.baseClient = baseClient
             this.leaderboard = this.leaderboard.bind(this)
             this.playerStats = this.playerStats.bind(this)
+            this.topAssisters = this.topAssisters.bind(this)
+            this.topMOTM = this.topMOTM.bind(this)
+            this.topScorers = this.topScorers.bind(this)
         }
 
         /**
@@ -284,12 +292,46 @@ export namespace stats {
             const resp = await this.baseClient.callTypedAPI(`/stats/player/${encodeURIComponent(params.id)}`, {method: "GET", body: undefined})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_player_playerStats>
         }
+
+        public async topAssisters(params: RequestType<typeof api_stats_top_scorers_topAssisters>): Promise<ResponseType<typeof api_stats_top_scorers_topAssisters>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                limit: params.limit === undefined ? undefined : String(params.limit),
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/stats/top-assisters`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_top_scorers_topAssisters>
+        }
+
+        public async topMOTM(params: RequestType<typeof api_stats_top_scorers_topMOTM>): Promise<ResponseType<typeof api_stats_top_scorers_topMOTM>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                limit: params.limit === undefined ? undefined : String(params.limit),
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/stats/top-motm`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_top_scorers_topMOTM>
+        }
+
+        public async topScorers(params: RequestType<typeof api_stats_top_scorers_topScorers>): Promise<ResponseType<typeof api_stats_top_scorers_topScorers>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                limit: params.limit === undefined ? undefined : String(params.limit),
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/stats/top-scorers`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_top_scorers_topScorers>
+        }
     }
 }
 
 /**
  * Import the endpoint handlers to derive the types for the client.
  */
+import { allVotes as api_votes_all_votes_allVotes } from "~backend/votes/all_votes";
 import { results as api_votes_results_results } from "~backend/votes/results";
 import { submit as api_votes_submit_submit } from "~backend/votes/submit";
 
@@ -300,8 +342,15 @@ export namespace votes {
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
+            this.allVotes = this.allVotes.bind(this)
             this.results = this.results.bind(this)
             this.submit = this.submit.bind(this)
+        }
+
+        public async allVotes(params: { gameId: number }): Promise<ResponseType<typeof api_votes_all_votes_allVotes>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/votes/${encodeURIComponent(params.gameId)}/all`, {method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_votes_all_votes_allVotes>
         }
 
         /**

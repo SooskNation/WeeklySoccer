@@ -36,11 +36,24 @@ interface VoteResult {
   totalPoints: number;
 }
 
+interface VoteDetail {
+  voteId: number;
+  firstChoice: string;
+  secondChoice: string | null;
+  thirdChoice: string | null;
+  createdAt: Date;
+}
+
+interface AllVotesData {
+  votes: VoteDetail[];
+  aggregate: VoteResult[];
+}
+
 export default function ResultsPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [expandedGame, setExpandedGame] = useState<number | null>(null);
   const [gameDetails, setGameDetails] = useState<Map<number, GameDetails>>(new Map());
-  const [voteResults, setVoteResults] = useState<Map<number, VoteResult[]>>(new Map());
+  const [voteResults, setVoteResults] = useState<Map<number, AllVotesData>>(new Map());
   const { toast } = useToast();
 
   useEffect(() => {
@@ -73,10 +86,10 @@ export default function ResultsPage() {
       try {
         const [details, votes] = await Promise.all([
           backend.games.get({ id: gameId }),
-          backend.votes.results({ gameId })
+          backend.votes.allVotes({ gameId })
         ]);
         setGameDetails(new Map(gameDetails.set(gameId, details)));
-        setVoteResults(new Map(voteResults.set(gameId, votes.results)));
+        setVoteResults(new Map(voteResults.set(gameId, votes)));
       } catch (error) {
         console.error("Failed to load game details:", error);
         toast({
@@ -212,14 +225,14 @@ export default function ResultsPage() {
                     </div>
                   </div>
 
-                  {votes && votes.length > 0 && (
+                  {votes && votes.aggregate.length > 0 && (
                     <div>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                         <Trophy className="h-5 w-5 text-yellow-500" />
-                        Voting Results
+                        Voting Results (Aggregated)
                       </h3>
                       <div className="space-y-2">
-                        {votes.map((vote, index) => (
+                        {votes.aggregate.map((vote, index) => (
                           <div key={vote.playerId} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                             <div className="flex items-center gap-3">
                               <span className="text-2xl font-bold text-muted-foreground">
@@ -244,6 +257,38 @@ export default function ResultsPage() {
                           </div>
                         ))}
                       </div>
+
+                      {votes.votes.length > 0 && (
+                        <div className="mt-6">
+                          <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
+                            Individual Votes (Anonymous)
+                          </h4>
+                          <p className="text-xs text-muted-foreground mb-3">
+                            Votes are shown without voter identity for privacy
+                          </p>
+                          <div className="space-y-1">
+                            {votes.votes.map((vote) => (
+                              <div key={vote.voteId} className="p-2 rounded bg-muted/30 text-sm">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium">🥇 {vote.firstChoice}</span>
+                                  {vote.secondChoice && (
+                                    <>
+                                      <span className="text-muted-foreground">•</span>
+                                      <span className="text-muted-foreground">🥈 {vote.secondChoice}</span>
+                                    </>
+                                  )}
+                                  {vote.thirdChoice && (
+                                    <>
+                                      <span className="text-muted-foreground">•</span>
+                                      <span className="text-muted-foreground">🥉 {vote.thirdChoice}</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>

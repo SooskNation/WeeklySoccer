@@ -1,4 +1,5 @@
-import { api } from "encore.dev/api";
+import { api, APIError } from "encore.dev/api";
+import { getAuthData } from "~encore/auth";
 import db from "../db";
 
 interface PlayerStat {
@@ -28,6 +29,37 @@ interface Game {
 export const create = api<CreateGameParams, Game>(
   { auth: true, expose: true, method: "POST", path: "/games" },
   async ({ date, blackScore, whiteScore, stats }) => {
+    const authData = getAuthData();
+    
+    if (authData?.role !== "manager") {
+      throw APIError.permissionDenied("only managers can submit game results");
+    }
+
+    if (!date) {
+      throw APIError.invalidArgument("date is required");
+    }
+
+    if (blackScore === undefined || blackScore === null) {
+      throw APIError.invalidArgument("blackScore is required");
+    }
+
+    if (whiteScore === undefined || whiteScore === null) {
+      throw APIError.invalidArgument("whiteScore is required");
+    }
+
+    if (!stats || stats.length === 0) {
+      throw APIError.invalidArgument("at least one player stat is required");
+    }
+
+    for (const stat of stats) {
+      if (!stat.playerId) {
+        throw APIError.invalidArgument("playerId is required for all stats");
+      }
+      if (!stat.team || !['Black', 'White'].includes(stat.team)) {
+        throw APIError.invalidArgument("team must be either 'Black' or 'White'");
+      }
+    }
+
     const gameResult = await db.queryRow<{ game_id: number }>`
       INSERT INTO games (game_date, black_score, white_score)
       VALUES (${date}, ${blackScore}, ${whiteScore})

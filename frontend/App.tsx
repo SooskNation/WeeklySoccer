@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
+import Layout from "@/components/Layout";
 import HomePage from "@/pages/HomePage";
 import StatsPage from "@/pages/StatsPage";
 import PlayerProfilePage from "@/pages/PlayerProfilePage";
@@ -9,6 +10,7 @@ import ManagerDashboard from "@/pages/ManagerDashboard";
 import VotingPage from "@/pages/VotingPage";
 import ResultsPage from "@/pages/ResultsPage";
 import LoginPage from "@/pages/LoginPage";
+import "@/styles/theme.css";
 
 function AppInner() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,16 +51,18 @@ function AppInner() {
     <BrowserRouter>
       <div className="min-h-screen bg-background text-foreground dark">
         <Navbar onLogout={handleLogout} userRole={userRole} />
-        <main className="container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/stats" element={<StatsPage />} />
-            <Route path="/player/:id" element={<PlayerProfilePage />} />
-            <Route path="/manager" element={<ManagerDashboard />} />
-            <Route path="/vote" element={<VotingPage />} />
-            <Route path="/results" element={<ResultsPage />} />
-          </Routes>
-        </main>
+        <Layout>
+          <main className="container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/player/:id" element={<PlayerProfilePage />} />
+              <Route path="/manager" element={<ManagerDashboard />} />
+              <Route path="/vote" element={<VotingPage />} />
+              <Route path="/results" element={<ResultsPage />} />
+            </Routes>
+          </main>
+        </Layout>
         <Toaster />
       </div>
     </BrowserRouter>

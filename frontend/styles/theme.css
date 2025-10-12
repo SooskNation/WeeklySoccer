@@ -1,0 +1,78 @@
+@layer base {
+  :root {
+    --color-primary: #0A2540;
+    --color-accent: #A6252A;
+    --color-accent-2: #0096D6;
+    --color-neutral-dark: #1F2A37;
+    --color-neutral-light: #F7F9FB;
+    --color-white: #FFFFFF;
+    --color-gold: #FFD700;
+    
+    --font-heading: "Inter", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Inter", Arial, sans-serif;
+    
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+    
+    --radius-1: 6px;
+    --radius-2: 12px;
+    
+    --background: #0A1E3D;
+    --foreground: #F7F9FB;
+    --card: #0f2847;
+    --card-foreground: #F7F9FB;
+    --popover: #0f2847;
+    --popover-foreground: #F7F9FB;
+    --primary: #0096D6;
+    --primary-foreground: #FFFFFF;
+    --secondary: #1a3a5c;
+    --secondary-foreground: #F7F9FB;
+    --muted: #1a3a5c;
+    --muted-foreground: #9ca3af;
+    --accent: #A6252A;
+    --accent-foreground: #FFFFFF;
+    --destructive: #dc2626;
+    --destructive-foreground: #FFFFFF;
+    --border: #1a3a5c;
+    --input: #1a3a5c;
+    --ring: #0096D6;
+    --chart-1: #0096D6;
+    --chart-2: #A6252A;
+    --chart-3: #FFD700;
+    --chart-4: #1a3a5c;
+    --chart-5: #F7F9FB;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  
+  h1 {
+    font-size: 2.25rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+}

@@ -150,6 +150,15 @@ export default function ManagerDashboard() {
     try {
       const stats = Array.from(playerStats.values());
       const scores = calculateScores();
+
+      if (stats.length === 0) {
+        toast({
+          title: "Error",
+          description: "Please add players to at least one team",
+          variant: "destructive",
+        });
+        return;
+      }
       
       await backend.games.create({
         date,
@@ -165,11 +174,12 @@ export default function ManagerDashboard() {
       setBlackTeam([]);
       setWhiteTeam([]);
       setPlayerStats(new Map());
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to submit game:", error);
+      const errorMessage = error?.message || "Failed to submit game results";
       toast({
         title: "Error",
-        description: "Failed to submit game results",
+        description: errorMessage,
         variant: "destructive",
       });
     }
