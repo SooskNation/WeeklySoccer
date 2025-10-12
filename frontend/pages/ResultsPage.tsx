@@ -164,7 +164,7 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
+                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-5.5 w-5.5 rounded-full object-cover" />
                                         {stat.goals}
                                       </span>
                                     )}
@@ -204,7 +204,7 @@ export default function ResultsPage() {
                                   <div className="flex gap-4 text-sm">
                                     {stat.goals > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-4 w-4 rounded-full object-cover" />
+                                        <img src="/soccer-ball.jpg" alt="Goal" className="h-5.5 w-5.5 rounded-full object-cover" />
                                         {stat.goals}
                                       </span>
                                     )}
