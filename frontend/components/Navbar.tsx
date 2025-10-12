@@ -12,9 +12,9 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
   const handleLogout = async () => {
     try {
       await backend.auth.logout();
-      onLogout();
+      await onLogout();
     } catch (err) {
-      console.error(err);
+      console.error("Logout error:", err);
     }
   };
 
@@ -51,12 +51,15 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
               </Link>
             )}
             
-            <div className="flex items-center gap-2 ml-4">
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="cursor-pointer">
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleLogout} 
+              className="cursor-pointer ml-4"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
         </div>
       </div>
