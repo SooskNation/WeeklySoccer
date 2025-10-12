@@ -2,6 +2,7 @@ import { api, Cookie } from "encore.dev/api";
 
 export interface LogoutResponse {
   session: Cookie<"session">;
+  success: boolean;
 }
 
 export const logout = api<void, LogoutResponse>(
@@ -15,6 +16,7 @@ export const logout = api<void, LogoutResponse>(
         secure: true,
         sameSite: "Lax",
       },
+      success: true,
     };
   }
 );

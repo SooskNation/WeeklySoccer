@@ -12,9 +12,10 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
   const handleLogout = async () => {
     try {
       await backend.auth.logout();
-      await onLogout();
     } catch (err) {
       console.error("Logout error:", err);
+    } finally {
+      onLogout();
     }
   };
 
