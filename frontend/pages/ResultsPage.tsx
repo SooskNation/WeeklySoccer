@@ -132,7 +132,7 @@ export default function ResultsPage() {
                       onClick={() => toggleGame(game.id)}
                     >
                       <CardTitle className="flex items-center gap-4 text-white">
-                        <span className="text-gray-400 text-lg">{new Date(game.date + 'T00:00:00').toLocaleDateString()}</span>
+                        <span className="text-gray-400 text-lg">{new Date(game.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         <span className="text-3xl font-bold">
                           <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
                         </span>
