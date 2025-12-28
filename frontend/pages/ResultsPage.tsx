@@ -132,7 +132,7 @@ export default function ResultsPage() {
                       onClick={() => toggleGame(game.id)}
                     >
                       <CardTitle className="flex items-center gap-4 text-white">
-                        <span className="text-gray-400 text-lg">{game.date}</span>
+                        <span className="text-gray-400 text-lg">{typeof game.date === 'string' ? game.date : new Date(game.date).toISOString().split('T')[0]}</span>
                         <span className="text-3xl font-bold">
                           <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
                         </span>
