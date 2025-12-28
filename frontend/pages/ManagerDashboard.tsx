@@ -108,6 +108,10 @@ export default function ManagerDashboard() {
     if (stat) {
       const newValue = stat[field] + 1;
       updatePlayerStat(playerId, field, newValue);
+      
+      if (field === 'goals' || field === 'ownGoals') {
+        setTimeout(() => updateCleanSheets(), 0);
+      }
     }
   };
 
@@ -126,6 +130,28 @@ export default function ManagerDashboard() {
     return { black, white };
   };
 
+  const updateCleanSheets = () => {
+    const scores = calculateScores();
+    const newStats = new Map(playerStats);
+    let updated = false;
+
+    newStats.forEach((stat, playerId) => {
+      if (stat.isGoalkeeper) {
+        const teamConceded = stat.team === 'Black' ? scores.white : scores.black;
+        const shouldHaveCleanSheet = teamConceded === 0;
+        
+        if (stat.cleanSheet !== shouldHaveCleanSheet) {
+          newStats.set(playerId, { ...stat, cleanSheet: shouldHaveCleanSheet });
+          updated = true;
+        }
+      }
+    });
+
+    if (updated) {
+      setPlayerStats(newStats);
+    }
+  };
+
   const movePlayerToTeam = (playerId: number, team: 'black' | 'white') => {
     removeFromTeam(playerId);
     addToTeam(playerId, team);
@@ -135,12 +161,15 @@ export default function ManagerDashboard() {
     const stat = playerStats.get(playerId);
     if (stat) {
       const isGoalkeeper = !stat.isGoalkeeper;
-      updatePlayerStat(playerId, 'isGoalkeeper', isGoalkeeper);
-      if (isGoalkeeper && scores[stat.team.toLowerCase() as 'black' | 'white'] === 0) {
-        updatePlayerStat(playerId, 'cleanSheet', true);
-      } else if (!isGoalkeeper) {
-        updatePlayerStat(playerId, 'cleanSheet', false);
-      }
+      const scores = calculateScores();
+      const teamConceded = stat.team === 'Black' ? scores.white : scores.black;
+      const cleanSheet = isGoalkeeper && teamConceded === 0;
+      
+      setPlayerStats(new Map(playerStats.set(playerId, { 
+        ...stat, 
+        isGoalkeeper, 
+        cleanSheet 
+      })));
     }
   };
 
