@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { Shirt, Trash2, GripVertical } from "lucide-react";
+import { Shirt, Trash2, GripVertical, Shield, Plus } from "lucide-react";
 
 interface Player {
   id: number;
@@ -18,7 +18,9 @@ interface PlayerStat {
   team: string;
   goals: number;
   assists: number;
+  ownGoals: number;
   isGoalkeeper: boolean;
+  isCaptain: boolean;
   cleanSheet: boolean;
 }
 
@@ -29,6 +31,8 @@ export default function ManagerDashboard() {
   const [whiteTeam, setWhiteTeam] = useState<number[]>([]);
   const [playerStats, setPlayerStats] = useState<Map<number, PlayerStat>>(new Map());
   const [draggedPlayer, setDraggedPlayer] = useState<number | null>(null);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [isAddingPlayer, setIsAddingPlayer] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -59,7 +63,9 @@ export default function ManagerDashboard() {
           team: 'Black',
           goals: 0,
           assists: 0,
+          ownGoals: 0,
           isGoalkeeper: false,
+          isCaptain: false,
           cleanSheet: false
         })));
       }
@@ -71,7 +77,9 @@ export default function ManagerDashboard() {
           team: 'White',
           goals: 0,
           assists: 0,
+          ownGoals: 0,
           isGoalkeeper: false,
+          isCaptain: false,
           cleanSheet: false
         })));
       }
@@ -93,7 +101,7 @@ export default function ManagerDashboard() {
     }
   };
 
-  const incrementStat = (playerId: number, field: 'goals' | 'assists') => {
+  const incrementStat = (playerId: number, field: 'goals' | 'assists' | 'ownGoals') => {
     const stat = playerStats.get(playerId);
     if (stat) {
       const newValue = stat[field] + 1;
@@ -107,8 +115,10 @@ export default function ManagerDashboard() {
     playerStats.forEach(stat => {
       if (stat.team === 'Black') {
         black += stat.goals;
+        white += stat.ownGoals;
       } else {
         white += stat.goals;
+        black += stat.ownGoals;
       }
     });
     return { black, white };
@@ -132,6 +142,24 @@ export default function ManagerDashboard() {
     }
   };
 
+  const toggleCaptain = (playerId: number) => {
+    const stat = playerStats.get(playerId);
+    if (!stat) return;
+
+    const teamPlayers = stat.team === 'Black' ? blackTeam : whiteTeam;
+    const newStats = new Map(playerStats);
+    
+    teamPlayers.forEach(pid => {
+      const pStat = newStats.get(pid);
+      if (pStat && pid !== playerId) {
+        newStats.set(pid, { ...pStat, isCaptain: false });
+      }
+    });
+    
+    newStats.set(playerId, { ...stat, isCaptain: !stat.isCaptain });
+    setPlayerStats(newStats);
+  };
+
   const handleDragStart = (playerId: number) => {
     setDraggedPlayer(playerId);
   };
@@ -144,6 +172,42 @@ export default function ManagerDashboard() {
     if (draggedPlayer !== null) {
       addToTeam(draggedPlayer, team);
       setDraggedPlayer(null);
+    }
+  };
+
+  const handleAddPlayer = async () => {
+    if (!newPlayerName.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a player name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setIsAddingPlayer(true);
+      const backend = getAuthenticatedBackend();
+      const newPlayer = await backend.players.create({
+        name: newPlayerName.trim(),
+        roleName: "player"
+      });
+      
+      setPlayers([...players, { id: newPlayer.id, name: newPlayer.name }]);
+      setNewPlayerName("");
+      toast({
+        title: "Success",
+        description: `Player ${newPlayer.name} added successfully`,
+      });
+    } catch (error: any) {
+      console.error("Failed to add player:", error);
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to add player",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingPlayer(false);
     }
   };
 
@@ -230,6 +294,28 @@ export default function ManagerDashboard() {
               All players assigned
             </p>
           )}
+          <div className="border-t border-[#2a4a6c] pt-4 mt-4">
+            <Label htmlFor="newPlayer" className="text-gray-300 text-sm mb-2 block">Add New Player</Label>
+            <div className="flex gap-2">
+              <Input
+                id="newPlayer"
+                value={newPlayerName}
+                onChange={(e) => setNewPlayerName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
+                placeholder="Player name"
+                className="bg-[#1a3a5c] border-[#2a4a6c] text-white flex-1"
+                disabled={isAddingPlayer}
+              />
+              <Button
+                onClick={handleAddPlayer}
+                disabled={isAddingPlayer || !newPlayerName.trim()}
+                size="sm"
+                className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e]"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -291,7 +377,7 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-3">
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-2">
                     <span className="font-medium text-white flex-1">{player.name}</span>
                     <button
                       onClick={() => incrementStat(playerId, 'goals')}
@@ -308,6 +394,21 @@ export default function ManagerDashboard() {
                     >
                       <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
+                    </button>
+                    <button
+                      onClick={() => incrementStat(playerId, 'ownGoals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add own goal"
+                    >
+                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
+                    </button>
+                    <button
+                      onClick={() => toggleCaptain(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isCaptain ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Captain"
+                    >
+                      <Shield className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => toggleGoalkeeper(playerId)}
@@ -350,7 +451,7 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-3">
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-2">
                     <span className="font-medium text-white flex-1">{player.name}</span>
                     <button
                       onClick={() => incrementStat(playerId, 'goals')}
@@ -367,6 +468,21 @@ export default function ManagerDashboard() {
                     >
                       <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
+                    </button>
+                    <button
+                      onClick={() => incrementStat(playerId, 'ownGoals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add own goal"
+                    >
+                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
+                    </button>
+                    <button
+                      onClick={() => toggleCaptain(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isCaptain ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Captain"
+                    >
+                      <Shield className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => toggleGoalkeeper(playerId)}

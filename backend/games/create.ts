@@ -7,7 +7,9 @@ interface PlayerStat {
   team: string;
   goals: number;
   assists: number;
+  ownGoals: number;
   isGoalkeeper: boolean;
+  isCaptain: boolean;
   cleanSheet: boolean;
 }
 
@@ -69,10 +71,12 @@ export const create = api<CreateGameParams, Game>(
     const gameId = gameResult!.game_id;
 
     for (const stat of stats) {
+      const ownGoals = stat.ownGoals || 0;
+      const isCaptain = stat.isCaptain || false;
       await db.exec`
-        INSERT INTO game_stats (game_id, player_id, team, goals, assists, clean_sheet, man_of_match)
+        INSERT INTO game_stats (game_id, player_id, team, goals, assists, own_goals, is_captain, clean_sheet, man_of_match)
         VALUES (${gameId}, ${stat.playerId}, ${stat.team}, ${stat.goals}, ${stat.assists}, 
-                ${stat.cleanSheet}, false)
+                ${ownGoals}, ${isCaptain}, ${stat.cleanSheet}, false)
       `;
     }
 
