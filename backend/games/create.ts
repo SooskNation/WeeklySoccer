@@ -73,10 +73,11 @@ export const create = api<CreateGameParams, Game>(
     for (const stat of stats) {
       const ownGoals = stat.ownGoals || 0;
       const isCaptain = stat.isCaptain || false;
+      const isGoalkeeper = stat.isGoalkeeper || false;
       await db.exec`
-        INSERT INTO game_stats (game_id, player_id, team, goals, assists, own_goals, is_captain, clean_sheet, man_of_match)
+        INSERT INTO game_stats (game_id, player_id, team, goals, assists, own_goals, is_captain, is_goalkeeper, clean_sheet, man_of_match)
         VALUES (${gameId}, ${stat.playerId}, ${stat.team}, ${stat.goals}, ${stat.assists}, 
-                ${ownGoals}, ${isCaptain}, ${stat.cleanSheet}, false)
+                ${ownGoals}, ${isCaptain}, ${isGoalkeeper}, ${stat.cleanSheet}, false)
       `;
     }
 

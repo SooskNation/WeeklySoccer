@@ -11,6 +11,9 @@ interface PlayerStat {
   team: string;
   goals: number;
   assists: number;
+  ownGoals: number;
+  isGoalkeeper: boolean;
+  isCaptain: boolean;
   cleanSheet: boolean;
   manOfMatch: boolean;
 }
@@ -49,10 +52,16 @@ export const get = api<GetGameParams, Game>(
       team: string;
       goals: number;
       assists: number;
+      own_goals: number;
+      is_goalkeeper: boolean;
+      is_captain: boolean;
       clean_sheet: boolean;
       man_of_match: boolean;
     }>`
       SELECT gs.player_id, p.name as player_name, gs.team, gs.goals, gs.assists, 
+             COALESCE(gs.own_goals, 0) as own_goals,
+             COALESCE(gs.is_goalkeeper, false) as is_goalkeeper,
+             COALESCE(gs.is_captain, false) as is_captain,
              gs.clean_sheet, gs.man_of_match
       FROM game_stats gs
       JOIN players p ON gs.player_id = p.player_id
@@ -73,6 +82,9 @@ export const get = api<GetGameParams, Game>(
         team: row.team,
         goals: row.goals,
         assists: row.assists,
+        ownGoals: row.own_goals,
+        isGoalkeeper: row.is_goalkeeper,
+        isCaptain: row.is_captain,
         cleanSheet: row.clean_sheet,
         manOfMatch: row.man_of_match
       }))

@@ -23,7 +23,7 @@ export const list = api<void, ListGamesResponse>(
       black_score: number;
       white_score: number;
     }>`
-      SELECT game_id, game_date, black_score, white_score
+      SELECT game_id, to_char(game_date, 'YYYY-MM-DD') as game_date, black_score, white_score
       FROM games
       ORDER BY game_date DESC
     `;

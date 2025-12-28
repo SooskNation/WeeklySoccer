@@ -19,6 +19,9 @@ interface PlayerStat {
   team: string;
   goals: number;
   assists: number;
+  ownGoals: number;
+  isGoalkeeper: boolean;
+  isCaptain: boolean;
   cleanSheet: boolean;
   manOfMatch: boolean;
 }
@@ -36,6 +39,9 @@ interface PlayerStatInput {
   team: string;
   goals: number;
   assists: number;
+  ownGoals: number;
+  isGoalkeeper: boolean;
+  isCaptain: boolean;
   cleanSheet: boolean;
   manOfMatch: boolean;
 }
@@ -79,6 +85,9 @@ export default function ModifyResultsPage() {
           team: stat.team,
           goals: stat.goals,
           assists: stat.assists,
+          ownGoals: stat.ownGoals,
+          isGoalkeeper: stat.isGoalkeeper,
+          isCaptain: stat.isCaptain,
           cleanSheet: stat.cleanSheet,
           manOfMatch: stat.manOfMatch
         });
@@ -114,6 +123,9 @@ export default function ModifyResultsPage() {
           team: 'Black',
           goals: 0,
           assists: 0,
+          ownGoals: 0,
+          isGoalkeeper: false,
+          isCaptain: false,
           cleanSheet: false,
           manOfMatch: false
         })));
@@ -126,6 +138,9 @@ export default function ModifyResultsPage() {
           team: 'White',
           goals: 0,
           assists: 0,
+          ownGoals: 0,
+          isGoalkeeper: false,
+          isCaptain: false,
           cleanSheet: false,
           manOfMatch: false
         })));
@@ -148,10 +163,15 @@ export default function ModifyResultsPage() {
     }
   };
 
-  const incrementStat = (playerId: number, field: 'goals' | 'assists') => {
+  const incrementStat = (playerId: number, field: 'goals' | 'assists' | 'ownGoals') => {
     const stat = playerStats.get(playerId);
     if (stat) {
-      updatePlayerStat(playerId, field, stat[field] + 1);
+      const newValue = stat[field] + 1;
+      updatePlayerStat(playerId, field, newValue);
+      
+      if (field === 'goals' || field === 'ownGoals') {
+        setTimeout(() => updateCleanSheets(), 0);
+      }
     }
   };
 
@@ -161,33 +181,72 @@ export default function ModifyResultsPage() {
     playerStats.forEach(stat => {
       if (stat.team === 'Black') {
         black += stat.goals;
+        white += stat.ownGoals;
       } else {
         white += stat.goals;
+        black += stat.ownGoals;
       }
     });
     return { black, white };
   };
 
-  const toggleCleanSheet = (playerId: number) => {
-    const stat = playerStats.get(playerId);
-    if (stat) {
-      updatePlayerStat(playerId, 'cleanSheet', !stat.cleanSheet);
+  const updateCleanSheets = () => {
+    const scores = calculateScores();
+    const newStats = new Map(playerStats);
+    let updated = false;
+
+    newStats.forEach((stat, playerId) => {
+      if (stat.isGoalkeeper) {
+        const teamConceded = stat.team === 'Black' ? scores.white : scores.black;
+        const shouldHaveCleanSheet = teamConceded === 0;
+        
+        if (stat.cleanSheet !== shouldHaveCleanSheet) {
+          newStats.set(playerId, { ...stat, cleanSheet: shouldHaveCleanSheet });
+          updated = true;
+        }
+      }
+    });
+
+    if (updated) {
+      setPlayerStats(newStats);
     }
   };
 
-  const toggleManOfMatch = (playerId: number) => {
+  const toggleGoalkeeper = (playerId: number) => {
+    const stat = playerStats.get(playerId);
+    if (stat) {
+      const isGoalkeeper = !stat.isGoalkeeper;
+      const scores = calculateScores();
+      const teamConceded = stat.team === 'Black' ? scores.white : scores.black;
+      const cleanSheet = isGoalkeeper && teamConceded === 0;
+      
+      setPlayerStats(new Map(playerStats.set(playerId, { 
+        ...stat, 
+        isGoalkeeper, 
+        cleanSheet 
+      })));
+    }
+  };
+
+  const toggleCaptain = (playerId: number) => {
     const stat = playerStats.get(playerId);
     if (!stat) return;
 
+    const teamPlayers = stat.team === 'Black' ? blackTeam : whiteTeam;
     const newStats = new Map(playerStats);
-    newStats.forEach((s, pid) => {
-      if (pid !== playerId) {
-        newStats.set(pid, { ...s, manOfMatch: false });
+    
+    teamPlayers.forEach(pid => {
+      const pStat = newStats.get(pid);
+      if (pStat && pid !== playerId) {
+        newStats.set(pid, { ...pStat, isCaptain: false });
       }
     });
-    newStats.set(playerId, { ...stat, manOfMatch: !stat.manOfMatch });
+    
+    newStats.set(playerId, { ...stat, isCaptain: !stat.isCaptain });
     setPlayerStats(newStats);
   };
+
+
 
   const movePlayerToTeam = (playerId: number, team: 'black' | 'white') => {
     removeFromTeam(playerId);
@@ -365,18 +424,26 @@ export default function ModifyResultsPage() {
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
-                      onClick={() => toggleCleanSheet(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.cleanSheet ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Clean Sheet"
+                      onClick={() => incrementStat(playerId, 'ownGoals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add own goal"
                     >
-                      <img src="/gloves.png" alt="Clean Sheet" className="h-5 w-5 object-contain" />
+                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
                     </button>
                     <button
-                      onClick={() => toggleManOfMatch(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.manOfMatch ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Man of the Match"
+                      onClick={() => toggleCaptain(playerId)}
+                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
+                      title="Captain"
                     >
-                      <span className="text-sm font-bold">⭐</span>
+                      C
+                    </button>
+                    <button
+                      onClick={() => toggleGoalkeeper(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Goalkeeper"
+                    >
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
@@ -431,18 +498,26 @@ export default function ModifyResultsPage() {
                       <span className="text-sm font-medium text-white">{stat.assists}</span>
                     </button>
                     <button
-                      onClick={() => toggleCleanSheet(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.cleanSheet ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Clean Sheet"
+                      onClick={() => incrementStat(playerId, 'ownGoals')}
+                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                      title="Add own goal"
                     >
-                      <img src="/gloves.png" alt="Clean Sheet" className="h-5 w-5 object-contain" />
+                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
                     </button>
                     <button
-                      onClick={() => toggleManOfMatch(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.manOfMatch ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Man of the Match"
+                      onClick={() => toggleCaptain(playerId)}
+                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
+                      title="Captain"
                     >
-                      <span className="text-sm font-bold">⭐</span>
+                      C
+                    </button>
+                    <button
+                      onClick={() => toggleGoalkeeper(playerId)}
+                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      title="Goalkeeper"
+                    >
+                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
                     </button>
                     <button
                       onClick={() => removeFromTeam(playerId)}
