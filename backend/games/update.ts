@@ -82,20 +82,24 @@ export const update = api<UpdateGameParams, Game>(
 
       const updated = await db.queryRow<{
         game_id: number;
-        game_date: Date;
+        game_date: string;
         black_score: number;
         white_score: number;
       }>`
-        SELECT game_id, game_date, black_score, white_score
+        SELECT game_id, to_char(game_date, 'YYYY-MM-DD') as game_date, black_score, white_score
         FROM games
         WHERE game_id = ${id}
       `;
 
+      if (!updated) {
+        throw APIError.internal("failed to retrieve updated game");
+      }
+
       return {
-        id: updated!.game_id,
-        date: updated!.game_date.toISOString().split('T')[0],
-        blackScore: updated!.black_score,
-        whiteScore: updated!.white_score
+        id: updated.game_id,
+        date: updated.game_date,
+        blackScore: updated.black_score,
+        whiteScore: updated.white_score
       };
     } catch (error) {
       console.error("Error updating game:", error);
