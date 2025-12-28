@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { Shirt, Trash2, GripVertical, Shield, Plus } from "lucide-react";
+import { Shirt, Trash2, GripVertical, Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Player {
@@ -448,10 +448,10 @@ export default function ManagerDashboard() {
                     </button>
                     <button
                       onClick={() => toggleCaptain(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.isCaptain ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
                       title="Captain"
                     >
-                      <Shield className="h-5 w-5" />
+                      C
                     </button>
                     <button
                       onClick={() => toggleGoalkeeper(playerId)}
@@ -522,10 +522,10 @@ export default function ManagerDashboard() {
                     </button>
                     <button
                       onClick={() => toggleCaptain(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.isCaptain ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
                       title="Captain"
                     >
-                      <Shield className="h-5 w-5" />
+                      C
                     </button>
                     <button
                       onClick={() => toggleGoalkeeper(playerId)}
