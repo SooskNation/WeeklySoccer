@@ -8,9 +8,13 @@ interface PlayerStats {
   goals: number;
   assists: number;
   wins: number;
+  draws: number;
+  losses: number;
   motm: number;
   cleanSheets: number;
   winPercentage: number;
+  totalPoints: number;
+  pointsPerGame: number;
 }
 
 interface LeaderboardResponse {
@@ -47,17 +51,26 @@ export const leaderboard = api<void, LeaderboardResponse>(
     const stats: PlayerStats[] = [];
 
     for (const row of rows) {
-      const winsRow = await db.queryRow<{ total_wins: number }>`
-        SELECT COALESCE(COUNT(*), 0) as total_wins
+      const recordRow = await db.queryRow<{ total_wins: number; total_draws: number; total_losses: number }>`
+        SELECT 
+          COALESCE(SUM(CASE WHEN (gs.team = 'Black' AND g.black_score > g.white_score) 
+                             OR (gs.team = 'White' AND g.white_score > g.black_score) 
+                        THEN 1 ELSE 0 END), 0) as total_wins,
+          COALESCE(SUM(CASE WHEN g.black_score = g.white_score THEN 1 ELSE 0 END), 0) as total_draws,
+          COALESCE(SUM(CASE WHEN (gs.team = 'Black' AND g.black_score < g.white_score) 
+                             OR (gs.team = 'White' AND g.white_score < g.black_score) 
+                        THEN 1 ELSE 0 END), 0) as total_losses
         FROM game_stats gs
         JOIN games g ON gs.game_id = g.game_id
         WHERE gs.player_id = ${row.player_id}
-          AND ((gs.team = 'Black' AND g.black_score > g.white_score)
-            OR (gs.team = 'White' AND g.white_score > g.black_score))
       `;
 
       const gamesPlayed = Number(row.games_played);
-      const wins = Number(winsRow?.total_wins || 0);
+      const wins = Number(recordRow?.total_wins || 0);
+      const draws = Number(recordRow?.total_draws || 0);
+      const losses = Number(recordRow?.total_losses || 0);
+      const totalPoints = wins * 3 + draws * 1;
+      const pointsPerGame = gamesPlayed > 0 ? Number((totalPoints / gamesPlayed).toFixed(2)) : 0;
 
       stats.push({
         playerId: row.player_id,
@@ -66,9 +79,13 @@ export const leaderboard = api<void, LeaderboardResponse>(
         goals: Number(row.total_goals),
         assists: Number(row.total_assists),
         wins,
+        draws,
+        losses,
         motm: Number(row.total_motm),
         cleanSheets: Number(row.total_clean_sheets),
-        winPercentage: gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0
+        winPercentage: gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0,
+        totalPoints,
+        pointsPerGame
       });
     }
 

@@ -9,6 +9,7 @@ import PlayerProfilePage from "@/pages/PlayerProfilePage";
 import ManagerDashboard from "@/pages/ManagerDashboard";
 import VotingPage from "@/pages/VotingPage";
 import ResultsPage from "@/pages/ResultsPage";
+import ModifyResultsPage from "@/pages/ModifyResultsPage";
 import LoginPage from "@/pages/LoginPage";
 import "@/styles/theme.css";
 
@@ -61,6 +62,7 @@ function AppInner() {
               <Route path="/manager" element={<ManagerDashboard />} />
               <Route path="/vote" element={<VotingPage />} />
               <Route path="/results" element={<ResultsPage />} />
+              <Route path="/modify-results/:gameId" element={<ModifyResultsPage />} />
             </Routes>
           </main>
         </Layout>

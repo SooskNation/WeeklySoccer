@@ -14,9 +14,13 @@ interface PlayerStats {
   goals: number;
   assists: number;
   wins: number;
+  draws: number;
+  losses: number;
   motm: number;
   cleanSheets: number;
   winPercentage: number;
+  totalPoints: number;
+  pointsPerGame: number;
 }
 
 interface TopPlayer {
@@ -26,7 +30,7 @@ interface TopPlayer {
   gamesPlayed: number;
 }
 
-type SortField = 'playerName' | 'gamesPlayed' | 'goals' | 'assists' | 'wins' | 'winPercentage' | 'motm' | 'cleanSheets';
+type SortField = 'playerName' | 'gamesPlayed' | 'goals' | 'assists' | 'wins' | 'draws' | 'losses' | 'winPercentage' | 'motm' | 'cleanSheets' | 'totalPoints' | 'pointsPerGame';
 type SortDirection = 'asc' | 'desc';
 
 export default function StatsPage() {
@@ -207,6 +211,22 @@ export default function StatsPage() {
                       Clean Sheets <SortIcon field="cleanSheets" />
                     </div>
                   </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('totalPoints')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      Total Pts <SortIcon field="totalPoints" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('pointsPerGame')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      Pts/Game <SortIcon field="pointsPerGame" />
+                    </div>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -227,6 +247,8 @@ export default function StatsPage() {
                     <TableCell className="text-center">{player.winPercentage}%</TableCell>
                     <TableCell className="text-center">{player.motm}</TableCell>
                     <TableCell className="text-center">{player.cleanSheets}</TableCell>
+                    <TableCell className="text-center font-semibold">{player.totalPoints}</TableCell>
+                    <TableCell className="text-center">{player.pointsPerGame}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

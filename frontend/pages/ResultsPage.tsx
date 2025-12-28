@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy } from "lucide-react";
+import { Trophy, Edit } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Game {
@@ -53,7 +54,13 @@ export default function ResultsPage() {
   const [expandedGame, setExpandedGame] = useState<number | null>(null);
   const [gameDetails, setGameDetails] = useState<Map<number, GameDetails>>(new Map());
   const [voteResults, setVoteResults] = useState<Map<number, AllVotesData>>(new Map());
+  const [userRole, setUserRole] = useState<string | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    setUserRole(role);
+  }, []);
 
   useEffect(() => {
     loadGames();
@@ -118,14 +125,14 @@ export default function ResultsPage() {
 
             return (
               <Card key={game.id} className="bg-[#0f2847] border-[#1a3a5c]">
-                <CardHeader 
-                  className="cursor-pointer hover:bg-[#1a3a5c] transition-colors"
-                  onClick={() => toggleGame(game.id)}
-                >
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                    <div 
+                      className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => toggleGame(game.id)}
+                    >
                       <CardTitle className="flex items-center gap-4 text-white">
-                        <span className="text-gray-400 text-lg">{new Date(game.date).toLocaleDateString()}</span>
+                        <span className="text-gray-400 text-lg">{new Date(game.date + 'T00:00:00').toLocaleDateString()}</span>
                         <span className="text-3xl font-bold">
                           <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
                         </span>
@@ -141,6 +148,16 @@ export default function ResultsPage() {
                         )}
                       </CardTitle>
                     </div>
+                    {userRole === 'manager' && (
+                      <Link
+                        to={`/modify-results/${game.id}`}
+                        className="flex items-center gap-2 px-4 py-2 bg-[#1a3a5c] hover:bg-[#234a6f] text-[#ffd700] rounded-lg transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span className="text-sm font-medium">Modify</span>
+                      </Link>
+                    )}
                   </div>
                 </CardHeader>
 
