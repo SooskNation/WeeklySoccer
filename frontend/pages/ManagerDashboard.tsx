@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { Shirt, Trash2, GripVertical, Shield, Plus } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Player {
   id: number;
@@ -32,6 +33,7 @@ export default function ManagerDashboard() {
   const [playerStats, setPlayerStats] = useState<Map<number, PlayerStat>>(new Map());
   const [draggedPlayer, setDraggedPlayer] = useState<number | null>(null);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [newPlayerRole, setNewPlayerRole] = useState("Player");
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
   const { toast } = useToast();
 
@@ -190,11 +192,12 @@ export default function ManagerDashboard() {
       const backend = getAuthenticatedBackend();
       const newPlayer = await backend.players.create({
         name: newPlayerName.trim(),
-        roleName: "player"
+        roleName: newPlayerRole
       });
       
       setPlayers([...players, { id: newPlayer.id, name: newPlayer.name }]);
       setNewPlayerName("");
+      setNewPlayerRole("Player");
       toast({
         title: "Success",
         description: `Player ${newPlayer.name} added successfully`,
@@ -296,24 +299,35 @@ export default function ManagerDashboard() {
           )}
           <div className="border-t border-[#2a4a6c] pt-4 mt-4">
             <Label htmlFor="newPlayer" className="text-gray-300 text-sm mb-2 block">Add New Player</Label>
-            <div className="flex gap-2">
+            <div className="space-y-2">
               <Input
                 id="newPlayer"
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
                 placeholder="Player name"
-                className="bg-[#1a3a5c] border-[#2a4a6c] text-white flex-1"
+                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
                 disabled={isAddingPlayer}
               />
-              <Button
-                onClick={handleAddPlayer}
-                disabled={isAddingPlayer || !newPlayerName.trim()}
-                size="sm"
-                className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e]"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
+              <div className="flex gap-2">
+                <Select value={newPlayerRole} onValueChange={setNewPlayerRole}>
+                  <SelectTrigger className="bg-[#1a3a5c] border-[#2a4a6c] text-white flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Player">Player</SelectItem>
+                    <SelectItem value="Manager">Manager</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  onClick={handleAddPlayer}
+                  disabled={isAddingPlayer || !newPlayerName.trim()}
+                  size="sm"
+                  className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e]"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
