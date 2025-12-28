@@ -33,61 +33,73 @@ interface Game {
 export const update = api<UpdateGameParams, Game>(
   { auth: true, expose: true, method: "PUT", path: "/games/:id" },
   async ({ id, date, blackScore, whiteScore, stats }) => {
-    const authData = getAuthData();
-    
-    if (authData?.role !== "manager") {
-      throw APIError.permissionDenied("only managers can update game results");
-    }
+    try {
+      const authData = getAuthData();
+      
+      if (authData?.role !== "manager") {
+        throw APIError.permissionDenied("only managers can update game results");
+      }
 
-    const existing = await db.queryRow<{ game_id: number }>`
-      SELECT game_id FROM games WHERE game_id = ${id}
-    `;
-
-    if (!existing) {
-      throw APIError.notFound("game not found");
-    }
-
-    if (date || blackScore !== undefined || whiteScore !== undefined) {
-      await db.exec`
-        UPDATE games
-        SET game_date = COALESCE(${date || null}, game_date),
-            black_score = COALESCE(${blackScore ?? null}, black_score),
-            white_score = COALESCE(${whiteScore ?? null}, white_score)
-        WHERE game_id = ${id}
+      const existing = await db.queryRow<{ game_id: number }>`
+        SELECT game_id FROM games WHERE game_id = ${id}
       `;
-    }
 
-    if (stats && stats.length > 0) {
-      await db.exec`DELETE FROM game_stats WHERE game_id = ${id}`;
+      if (!existing) {
+        throw APIError.notFound("game not found");
+      }
 
-      for (const stat of stats) {
-        const ownGoals = stat.ownGoals || 0;
-        const isGoalkeeper = stat.isGoalkeeper || false;
-        const isCaptain = stat.isCaptain || false;
+      if (date || blackScore !== undefined || whiteScore !== undefined) {
+        const dateValue = date ? date : null;
+        const blackScoreValue = blackScore !== undefined ? blackScore : null;
+        const whiteScoreValue = whiteScore !== undefined ? whiteScore : null;
+        
         await db.exec`
-          INSERT INTO game_stats (game_id, player_id, team, goals, assists, own_goals, is_goalkeeper, is_captain, clean_sheet, man_of_match)
-          VALUES (${id}, ${stat.playerId}, ${stat.team}, ${stat.goals}, ${stat.assists}, 
-                  ${ownGoals}, ${isGoalkeeper}, ${isCaptain}, ${stat.cleanSheet}, ${stat.manOfMatch})
+          UPDATE games
+          SET game_date = COALESCE(${dateValue}, game_date),
+              black_score = COALESCE(${blackScoreValue}, black_score),
+              white_score = COALESCE(${whiteScoreValue}, white_score)
+          WHERE game_id = ${id}
         `;
       }
+
+      if (stats && stats.length > 0) {
+        await db.exec`DELETE FROM game_stats WHERE game_id = ${id}`;
+
+        for (const stat of stats) {
+          const ownGoals = stat.ownGoals || 0;
+          const isGoalkeeper = stat.isGoalkeeper ?? false;
+          const isCaptain = stat.isCaptain ?? false;
+          const cleanSheet = stat.cleanSheet ?? false;
+          const manOfMatch = stat.manOfMatch ?? false;
+          
+          await db.exec`
+            INSERT INTO game_stats (game_id, player_id, team, goals, assists, own_goals, is_goalkeeper, is_captain, clean_sheet, man_of_match)
+            VALUES (${id}, ${stat.playerId}, ${stat.team}, ${stat.goals}, ${stat.assists}, 
+                    ${ownGoals}, ${isGoalkeeper}, ${isCaptain}, ${cleanSheet}, ${manOfMatch})
+          `;
+        }
+      }
+
+      const updated = await db.queryRow<{
+        game_id: number;
+        game_date: Date;
+        black_score: number;
+        white_score: number;
+      }>`
+        SELECT game_id, game_date, black_score, white_score
+        FROM games
+        WHERE game_id = ${id}
+      `;
+
+      return {
+        id: updated!.game_id,
+        date: updated!.game_date.toISOString().split('T')[0],
+        blackScore: updated!.black_score,
+        whiteScore: updated!.white_score
+      };
+    } catch (error) {
+      console.error("Error updating game:", error);
+      throw error;
     }
-
-    const updated = await db.queryRow<{
-      game_id: number;
-      game_date: Date;
-      black_score: number;
-      white_score: number;
-    }>`
-      SELECT game_id, game_date, black_score, white_score
-      FROM games
-      WHERE game_id = ${id}
-    `;
-
-    return {
-      id: updated!.game_id,
-      date: updated!.game_date.toISOString().split('T')[0],
-      blackScore: updated!.black_score,
-      whiteScore: updated!.white_score
-    };
   }
 );
