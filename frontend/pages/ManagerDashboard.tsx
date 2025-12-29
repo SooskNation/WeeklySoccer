@@ -427,7 +427,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-7 w-7 rounded-full object-cover" />
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
@@ -501,7 +501,7 @@ export default function ManagerDashboard() {
                       className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                       title="Add goal"
                     >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-7 w-7 rounded-full object-cover" />
+                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
                       <span className="text-sm font-medium text-white">{stat.goals}</span>
                     </button>
                     <button
