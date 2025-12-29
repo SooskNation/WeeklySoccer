@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CircleDot, Footprints, Shield, Trophy } from "lucide-react";
+import { Shield, Trophy } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import Top3StatCard from "@/components/Top3StatCard";
 
@@ -31,7 +31,7 @@ interface TopPlayer {
   gamesPlayed: number;
 }
 
-type SortField = 'playerName' | 'gamesPlayed' | 'goals' | 'assists' | 'wins' | 'draws' | 'losses' | 'winPercentage' | 'motm' | 'cleanSheets' | 'totalPoints' | 'pointsPerGame';
+type SortField = 'playerName' | 'gamesPlayed' | 'goals' | 'assists' | 'wins' | 'draws' | 'losses' | 'winPercentage' | 'motm' | 'cleanSheets' | 'totalPoints' | 'pointsPerGame' | 'goalsPerGame' | 'assistsPerGame';
 type SortDirection = 'asc' | 'desc';
 
 export default function StatsPage() {
@@ -40,7 +40,7 @@ export default function StatsPage() {
   const [topAssisters, setTopAssisters] = useState<TopPlayer[]>([]);
   const [topMOTM, setTopMOTM] = useState<TopPlayer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState<SortField>('goals');
+  const [sortBy, setSortBy] = useState<SortField>('pointsPerGame');
   const [sortDir, setSortDir] = useState<SortDirection>('desc');
   const { toast } = useToast();
 
@@ -118,13 +118,11 @@ export default function StatsPage() {
         <Top3StatCard
           title="Top Scorers"
           players={topScorers}
-          icon={CircleDot}
           valueLabel="goals"
         />
         <Top3StatCard
           title="Top Assisters"
           players={topAssisters}
-          icon={Footprints}
           valueLabel="assists"
         />
         <Top3StatCard
@@ -157,67 +155,7 @@ export default function StatsPage() {
                     onClick={() => handleSort('gamesPlayed')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      Games <SortIcon field="gamesPlayed" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('goals')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <CircleDot className="h-5 w-5" />
-                      Goals <SortIcon field="goals" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('assists')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <Footprints className="h-5 w-5" />
-                      Assists <SortIcon field="assists" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('wins')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      Wins <SortIcon field="wins" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('winPercentage')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      Win % <SortIcon field="winPercentage" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('motm')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <Trophy className="h-5 w-5" />
-                      MOTM <SortIcon field="motm" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('cleanSheets')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <Shield className="h-5 w-5" />
-                      Clean Sheets <SortIcon field="cleanSheets" />
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleSort('totalPoints')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      Total Pts <SortIcon field="totalPoints" />
+                      GP <SortIcon field="gamesPlayed" />
                     </div>
                   </TableHead>
                   <TableHead 
@@ -225,16 +163,109 @@ export default function StatsPage() {
                     onClick={() => handleSort('pointsPerGame')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      Pts/Game <SortIcon field="pointsPerGame" />
+                      Pts/GP <SortIcon field="pointsPerGame" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('totalPoints')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      TotPts <SortIcon field="totalPoints" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('wins')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      W <SortIcon field="wins" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('draws')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      D <SortIcon field="draws" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('losses')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      L <SortIcon field="losses" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('goals')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      G <SortIcon field="goals" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('assists')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      A <SortIcon field="assists" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('cleanSheets')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <Shield className="h-4 w-4" />
+                      CS <SortIcon field="cleanSheets" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('motm')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <Trophy className="h-4 w-4" />
+                      MOTM <SortIcon field="motm" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('winPercentage')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      Win% <SortIcon field="winPercentage" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('goalsPerGame')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      G/GP <SortIcon field="goalsPerGame" />
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="text-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleSort('assistsPerGame')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      A/GP <SortIcon field="assistsPerGame" />
                     </div>
                   </TableHead>
                   <TableHead className="text-center">
-                    Last 5
+                    Last5
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedStats.map((player) => (
+                {sortedStats.map((player) => {
+                  const goalsPerGame = player.gamesPlayed > 0 ? (player.goals / player.gamesPlayed).toFixed(2) : '0.00';
+                  const assistsPerGame = player.gamesPlayed > 0 ? (player.assists / player.gamesPlayed).toFixed(2) : '0.00';
+                  return (
                   <TableRow key={player.playerId} className="hover:bg-muted/50">
                     <TableCell className="font-medium">
                       <Link 
@@ -245,14 +276,18 @@ export default function StatsPage() {
                       </Link>
                     </TableCell>
                     <TableCell className="text-center">{player.gamesPlayed}</TableCell>
-                    <TableCell className="text-center font-semibold">{player.goals}</TableCell>
-                    <TableCell className="text-center">{player.assists}</TableCell>
+                    <TableCell className="text-center font-semibold">{player.pointsPerGame}</TableCell>
+                    <TableCell className="text-center">{player.totalPoints}</TableCell>
                     <TableCell className="text-center">{player.wins}</TableCell>
-                    <TableCell className="text-center">{player.winPercentage}%</TableCell>
-                    <TableCell className="text-center">{player.motm}</TableCell>
+                    <TableCell className="text-center">{player.draws}</TableCell>
+                    <TableCell className="text-center">{player.losses}</TableCell>
+                    <TableCell className="text-center">{player.goals}</TableCell>
+                    <TableCell className="text-center">{player.assists}</TableCell>
                     <TableCell className="text-center">{player.cleanSheets}</TableCell>
-                    <TableCell className="text-center font-semibold">{player.totalPoints}</TableCell>
-                    <TableCell className="text-center">{player.pointsPerGame}</TableCell>
+                    <TableCell className="text-center">{player.motm}</TableCell>
+                    <TableCell className="text-center">{player.winPercentage}%</TableCell>
+                    <TableCell className="text-center">{goalsPerGame}</TableCell>
+                    <TableCell className="text-center">{assistsPerGame}</TableCell>
                     <TableCell className="text-center">
                       <div className="flex items-center justify-center gap-1">
                         {[...Array(5)].map((_, idx) => {
@@ -278,7 +313,8 @@ export default function StatsPage() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
