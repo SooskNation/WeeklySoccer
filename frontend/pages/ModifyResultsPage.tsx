@@ -73,7 +73,10 @@ export default function ModifyResultsPage() {
 
       setPlayers(playersData.players);
       setGameDetails(gameData);
-      setDate(gameData.date);
+      
+      const gameDate = new Date(gameData.date);
+      const formattedDate = gameDate.toISOString().split('T')[0];
+      setDate(formattedDate);
 
       const statsMap = new Map<number, PlayerStatInput>();
       const black: number[] = [];
