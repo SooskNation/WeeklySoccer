@@ -344,6 +344,7 @@ export namespace stats {
  * Import the endpoint handlers to derive the types for the client.
  */
 import { allVotes as api_votes_all_votes_allVotes } from "~backend/votes/all_votes";
+import { finalize as api_votes_finalize_finalize } from "~backend/votes/finalize";
 import { results as api_votes_results_results } from "~backend/votes/results";
 import { submit as api_votes_submit_submit } from "~backend/votes/submit";
 
@@ -355,6 +356,7 @@ export namespace votes {
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
             this.allVotes = this.allVotes.bind(this)
+            this.finalize = this.finalize.bind(this)
             this.results = this.results.bind(this)
             this.submit = this.submit.bind(this)
         }
@@ -363,6 +365,12 @@ export namespace votes {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/votes/${encodeURIComponent(params.gameId)}/all`, {method: "GET", body: undefined})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_votes_all_votes_allVotes>
+        }
+
+        public async finalize(params: { gameId: number }): Promise<ResponseType<typeof api_votes_finalize_finalize>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/votes/${encodeURIComponent(params.gameId)}/finalize`, {method: "POST", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_votes_finalize_finalize>
         }
 
         /**

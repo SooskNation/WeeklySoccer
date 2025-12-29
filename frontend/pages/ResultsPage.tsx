@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Edit } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Trophy, Edit, CheckCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Game {
@@ -55,6 +56,7 @@ export default function ResultsPage() {
   const [gameDetails, setGameDetails] = useState<Map<number, GameDetails>>(new Map());
   const [voteResults, setVoteResults] = useState<Map<number, AllVotesData>>(new Map());
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [finalizingGame, setFinalizingGame] = useState<number | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -106,6 +108,31 @@ export default function ResultsPage() {
           variant: "destructive",
         });
       }
+    }
+  };
+
+  const finalizeVoting = async (gameId: number) => {
+    setFinalizingGame(gameId);
+    try {
+      const backend = getAuthenticatedBackend();
+      const result = await backend.votes.finalize({ gameId });
+      
+      toast({
+        title: "Voting Finalized",
+        description: `${result.motmPlayerName} has been awarded MOTM`,
+      });
+
+      const details = await backend.games.get({ id: gameId });
+      setGameDetails(new Map(gameDetails.set(gameId, details)));
+    } catch (error) {
+      console.error("Failed to finalize voting:", error);
+      toast({
+        title: "Error",
+        description: "Failed to finalize voting results",
+        variant: "destructive",
+      });
+    } finally {
+      setFinalizingGame(null);
     }
   };
 
@@ -247,10 +274,22 @@ export default function ResultsPage() {
 
                     {votes && votes.aggregate.length > 0 && (
                       <div>
-                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-[#ffd700]">
-                          <Trophy className="h-5 w-5" />
-                          Voting Results (Aggregated)
-                        </h3>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-lg font-semibold flex items-center gap-2 text-[#ffd700]">
+                            <Trophy className="h-5 w-5" />
+                            Voting Results (Aggregated)
+                          </h3>
+                          {userRole === 'manager' && (
+                            <Button
+                              onClick={() => finalizeVoting(game.id)}
+                              disabled={finalizingGame === game.id}
+                              className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-2" />
+                              {finalizingGame === game.id ? "Finalizing..." : "Finalize MOTM"}
+                            </Button>
+                          )}
+                        </div>
                         <div className="space-y-2">
                           {votes.aggregate.map((vote, index) => (
                             <div key={vote.playerId} className="flex items-center justify-between p-3 rounded-lg bg-[#1a3a5c]">
