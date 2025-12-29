@@ -83,8 +83,20 @@ export default function StatsPage() {
   };
 
   const sortedStats = [...stats].sort((a, b) => {
-    const aVal = a[sortBy];
-    const bVal = b[sortBy];
+    let aVal: number | string;
+    let bVal: number | string;
+
+    if (sortBy === 'goalsPerGame') {
+      aVal = a.gamesPlayed > 0 ? a.goals / a.gamesPlayed : 0;
+      bVal = b.gamesPlayed > 0 ? b.goals / b.gamesPlayed : 0;
+    } else if (sortBy === 'assistsPerGame') {
+      aVal = a.gamesPlayed > 0 ? a.assists / a.gamesPlayed : 0;
+      bVal = b.gamesPlayed > 0 ? b.assists / b.gamesPlayed : 0;
+    } else {
+      aVal = a[sortBy];
+      bVal = b[sortBy];
+    }
+
     const multiplier = sortDir === 'asc' ? 1 : -1;
     
     if (typeof aVal === 'string' && typeof bVal === 'string') {
