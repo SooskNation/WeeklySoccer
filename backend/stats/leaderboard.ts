@@ -15,6 +15,7 @@ interface PlayerStats {
   winPercentage: number;
   totalPoints: number;
   pointsPerGame: number;
+  last5: string[];
 }
 
 interface LeaderboardResponse {
@@ -65,6 +66,21 @@ export const leaderboard = api<void, LeaderboardResponse>(
         WHERE gs.player_id = ${row.player_id}
       `;
 
+      const last5Rows = await db.queryAll<{ result: string }>`
+        SELECT 
+          CASE 
+            WHEN (gs.team = 'Black' AND g.black_score > g.white_score) 
+              OR (gs.team = 'White' AND g.white_score > g.black_score) THEN 'W'
+            WHEN g.black_score = g.white_score THEN 'D'
+            ELSE 'L'
+          END as result
+        FROM game_stats gs
+        JOIN games g ON gs.game_id = g.game_id
+        WHERE gs.player_id = ${row.player_id}
+        ORDER BY g.game_date DESC, g.game_id DESC
+        LIMIT 5
+      `;
+
       const gamesPlayed = Number(row.games_played);
       const wins = Number(recordRow?.total_wins || 0);
       const draws = Number(recordRow?.total_draws || 0);
@@ -85,7 +101,8 @@ export const leaderboard = api<void, LeaderboardResponse>(
         cleanSheets: Number(row.total_clean_sheets),
         winPercentage: gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0,
         totalPoints,
-        pointsPerGame
+        pointsPerGame,
+        last5: last5Rows.map(r => r.result)
       });
     }
 

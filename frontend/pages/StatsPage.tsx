@@ -21,6 +21,7 @@ interface PlayerStats {
   winPercentage: number;
   totalPoints: number;
   pointsPerGame: number;
+  last5: string[];
 }
 
 interface TopPlayer {
@@ -227,6 +228,9 @@ export default function StatsPage() {
                       Pts/Game <SortIcon field="pointsPerGame" />
                     </div>
                   </TableHead>
+                  <TableHead className="text-center">
+                    Last 5
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -249,6 +253,27 @@ export default function StatsPage() {
                     <TableCell className="text-center">{player.cleanSheets}</TableCell>
                     <TableCell className="text-center font-semibold">{player.totalPoints}</TableCell>
                     <TableCell className="text-center">{player.pointsPerGame}</TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        {player.last5.map((result, idx) => {
+                          const isLatest = idx === 0;
+                          return (
+                            <div
+                              key={idx}
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
+                                result === 'W'
+                                  ? 'bg-green-500 text-white'
+                                  : result === 'D'
+                                  ? 'bg-gray-400 text-white'
+                                  : 'bg-red-500 text-white'
+                              } ${isLatest ? 'ring-2 ring-foreground ring-offset-1' : ''}`}
+                              title={result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
+                            >
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
