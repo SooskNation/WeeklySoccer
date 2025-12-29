@@ -255,19 +255,22 @@ export default function StatsPage() {
                     <TableCell className="text-center">{player.pointsPerGame}</TableCell>
                     <TableCell className="text-center">
                       <div className="flex items-center justify-center gap-1">
-                        {player.last5.map((result, idx) => {
-                          const isLatest = idx === 0;
+                        {[...Array(5)].map((_, idx) => {
+                          const result = player.last5[idx];
+                          const isLatest = idx === 0 && result;
                           return (
                             <div
                               key={idx}
                               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
-                                result === 'W'
+                                !result
+                                  ? 'bg-muted border border-border'
+                                  : result === 'W'
                                   ? 'bg-green-500 text-white'
                                   : result === 'D'
                                   ? 'bg-gray-400 text-white'
                                   : 'bg-red-500 text-white'
                               } ${isLatest ? 'ring-2 ring-foreground ring-offset-1' : ''}`}
-                              title={result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
+                              title={!result ? 'No game' : result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
                             >
                             </div>
                           );
