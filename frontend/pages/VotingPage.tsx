@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { Trophy } from "lucide-react";
+import { Trophy, Users } from "lucide-react";
 
 interface Player {
   id: number;
@@ -19,10 +20,33 @@ interface Game {
   whiteScore: number;
 }
 
+interface PlayerStat {
+  playerId: number;
+  playerName: string;
+  team: string;
+  goals: number;
+  assists: number;
+  ownGoals: number;
+  isGoalkeeper: boolean;
+  isCaptain: boolean;
+  cleanSheet: boolean;
+  manOfMatch: boolean;
+}
+
+interface GameDetails {
+  id: number;
+  date: string;
+  blackScore: number;
+  whiteScore: number;
+  winner?: string;
+  stats: PlayerStat[];
+}
+
 export default function VotingPage() {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<number | null>(null);
+  const [gameDetails, setGameDetails] = useState<GameDetails | null>(null);
   const [voterId, setVoterId] = useState<number | null>(null);
   const [firstChoice, setFirstChoice] = useState<number | null>(null);
   const [secondChoice, setSecondChoice] = useState<number | null>(null);
@@ -33,14 +57,16 @@ export default function VotingPage() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (selectedGame) {
+      loadGameDetails();
+    }
+  }, [selectedGame]);
+
   const loadData = async () => {
     try {
       const backend = getAuthenticatedBackend();
-      const [playersData, gamesData] = await Promise.all([
-        backend.players.list(),
-        backend.games.list()
-      ]);
-      setPlayers(playersData.players);
+      const gamesData = await backend.games.list();
       setGames(gamesData.games);
       if (gamesData.games.length > 0) {
         setSelectedGame(gamesData.games[0].id);
@@ -50,6 +76,27 @@ export default function VotingPage() {
       toast({
         title: "Error",
         description: "Failed to load voting data",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const loadGameDetails = async () => {
+    if (!selectedGame) return;
+    
+    try {
+      const backend = getAuthenticatedBackend();
+      const details = await backend.games.get({ id: selectedGame });
+      setGameDetails(details);
+      setVoterId(null);
+      setFirstChoice(null);
+      setSecondChoice(null);
+      setThirdChoice(null);
+    } catch (error) {
+      console.error("Failed to load game details:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load game details",
         variant: "destructive",
       });
     }
@@ -79,9 +126,7 @@ export default function VotingPage() {
         description: "Vote submitted successfully",
       });
       
-      setFirstChoice(null);
-      setSecondChoice(null);
-      setThirdChoice(null);
+      navigate("/results");
     } catch (error) {
       console.error("Failed to submit vote:", error);
       toast({
@@ -92,9 +137,20 @@ export default function VotingPage() {
     }
   };
 
-  const getAvailablePlayers = (excluding: (number | null)[]) => {
-    return players.filter(p => !excluding.includes(p.id));
+  const getPlayersWhoPlayed = (): Player[] => {
+    if (!gameDetails) return [];
+    return gameDetails.stats.map(stat => ({
+      id: stat.playerId,
+      name: stat.playerName
+    }));
   };
+
+  const getAvailablePlayers = (excluding: (number | null)[]) => {
+    return getPlayersWhoPlayed().filter(p => !excluding.includes(p.id));
+  };
+
+  const getBlackTeam = () => gameDetails?.stats.filter(s => s.team === 'Black') || [];
+  const getWhiteTeam = () => gameDetails?.stats.filter(s => s.team === 'White') || [];
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -130,17 +186,62 @@ export default function VotingPage() {
             </Select>
           </div>
 
+          {gameDetails && (
+            <Card className="bg-muted/30">
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-semibold mb-3 flex items-center gap-2">
+                      <div className="w-4 h-4 bg-black rounded" />
+                      Black Team ({gameDetails.blackScore})
+                    </h3>
+                    <ul className="space-y-1 text-sm">
+                      {getBlackTeam().map(stat => (
+                        <li key={stat.playerId}>
+                          {stat.playerName}
+                          {stat.goals > 0 && ` ⚽${stat.goals}`}
+                          {stat.assists > 0 && ` 🅰️${stat.assists}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-3 flex items-center gap-2">
+                      <div className="w-4 h-4 bg-white border rounded" />
+                      White Team ({gameDetails.whiteScore})
+                    </h3>
+                    <ul className="space-y-1 text-sm">
+                      {getWhiteTeam().map(stat => (
+                        <li key={stat.playerId}>
+                          {stat.playerName}
+                          {stat.goals > 0 && ` ⚽${stat.goals}`}
+                          {stat.assists > 0 && ` 🅰️${stat.assists}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {gameDetails.winner && (
+                  <div className="mt-4 pt-4 border-t text-center font-semibold">
+                    Winner: {gameDetails.winner}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <div>
             <Label htmlFor="voter">Your Name</Label>
             <Select
               value={voterId?.toString()}
               onValueChange={(value) => setVoterId(parseInt(value))}
+              disabled={!gameDetails}
             >
               <SelectTrigger id="voter">
                 <SelectValue placeholder="Select your name" />
               </SelectTrigger>
               <SelectContent>
-                {players.map(player => (
+                {getPlayersWhoPlayed().map(player => (
                   <SelectItem key={player.id} value={player.id.toString()}>
                     {player.name}
                   </SelectItem>
