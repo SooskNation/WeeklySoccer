@@ -123,7 +123,7 @@ export default function VotingPage() {
               <SelectContent>
                 {games.map(game => (
                   <SelectItem key={game.id} value={game.id.toString()}>
-                    {game.date} - Black {game.blackScore} vs White {game.whiteScore}
+                    {new Date(game.date).toLocaleDateString()} - Black {game.blackScore} vs White {game.whiteScore}
                   </SelectItem>
                 ))}
               </SelectContent>
