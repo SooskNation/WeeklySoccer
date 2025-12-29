@@ -114,3 +114,36 @@ export const topMOTM = api<TopPlayerParams, TopScorersResponse>(
     return { players };
   }
 );
+
+export const topCleanSheets = api<TopPlayerParams, TopScorersResponse>(
+  { expose: true, method: "GET", path: "/stats/top-clean-sheets" },
+  async ({ limit = 3 }) => {
+    const rows = await db.queryAll<{
+      player_id: number;
+      player_name: string;
+      total_clean_sheets: number;
+      games_played: number;
+    }>`
+      SELECT 
+        p.player_id,
+        p.name as player_name,
+        COALESCE(SUM(CASE WHEN gs.clean_sheet THEN 1 ELSE 0 END), 0) as total_clean_sheets,
+        COUNT(gs.stat_id) as games_played
+      FROM players p
+      LEFT JOIN game_stats gs ON p.player_id = gs.player_id
+      GROUP BY p.player_id, p.name
+      HAVING COALESCE(SUM(CASE WHEN gs.clean_sheet THEN 1 ELSE 0 END), 0) > 0
+      ORDER BY total_clean_sheets DESC
+      LIMIT ${limit}
+    `;
+
+    const players = rows.map(row => ({
+      playerId: row.player_id,
+      playerName: row.player_name,
+      value: Number(row.total_clean_sheets),
+      gamesPlayed: Number(row.games_played)
+    }));
+
+    return { players };
+  }
+);

@@ -269,6 +269,7 @@ import { leaderboard as api_stats_leaderboard_leaderboard } from "~backend/stats
 import { playerStats as api_stats_player_playerStats } from "~backend/stats/player";
 import {
     topAssisters as api_stats_top_scorers_topAssisters,
+    topCleanSheets as api_stats_top_scorers_topCleanSheets,
     topMOTM as api_stats_top_scorers_topMOTM,
     topScorers as api_stats_top_scorers_topScorers
 } from "~backend/stats/top_scorers";
@@ -283,6 +284,7 @@ export namespace stats {
             this.leaderboard = this.leaderboard.bind(this)
             this.playerStats = this.playerStats.bind(this)
             this.topAssisters = this.topAssisters.bind(this)
+            this.topCleanSheets = this.topCleanSheets.bind(this)
             this.topMOTM = this.topMOTM.bind(this)
             this.topScorers = this.topScorers.bind(this)
         }
@@ -314,6 +316,17 @@ export namespace stats {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/stats/top-assisters`, {query, method: "GET", body: undefined})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_top_scorers_topAssisters>
+        }
+
+        public async topCleanSheets(params: RequestType<typeof api_stats_top_scorers_topCleanSheets>): Promise<ResponseType<typeof api_stats_top_scorers_topCleanSheets>> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                limit: params.limit === undefined ? undefined : String(params.limit),
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/stats/top-clean-sheets`, {query, method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_top_scorers_topCleanSheets>
         }
 
         public async topMOTM(params: RequestType<typeof api_stats_top_scorers_topMOTM>): Promise<ResponseType<typeof api_stats_top_scorers_topMOTM>> {

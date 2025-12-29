@@ -39,6 +39,7 @@ export default function StatsPage() {
   const [topScorers, setTopScorers] = useState<TopPlayer[]>([]);
   const [topAssisters, setTopAssisters] = useState<TopPlayer[]>([]);
   const [topMOTM, setTopMOTM] = useState<TopPlayer[]>([]);
+  const [topCleanSheets, setTopCleanSheets] = useState<TopPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortField>('pointsPerGame');
   const [sortDir, setSortDir] = useState<SortDirection>('desc');
@@ -51,16 +52,18 @@ export default function StatsPage() {
   const loadStats = async () => {
     try {
       const backend = getAuthenticatedBackend();
-      const [leaderboard, scorers, assisters, motm] = await Promise.all([
+      const [leaderboard, scorers, assisters, motm, cleanSheets] = await Promise.all([
         backend.stats.leaderboard(),
         backend.stats.topScorers({ limit: 3 }),
         backend.stats.topAssisters({ limit: 3 }),
-        backend.stats.topMOTM({ limit: 3 })
+        backend.stats.topMOTM({ limit: 3 }),
+        backend.stats.topCleanSheets({ limit: 3 })
       ]);
       setStats(leaderboard.stats);
       setTopScorers(scorers.players);
       setTopAssisters(assisters.players);
       setTopMOTM(motm.players);
+      setTopCleanSheets(cleanSheets.players);
     } catch (error) {
       console.error("Failed to load stats:", error);
       toast({
@@ -126,7 +129,7 @@ export default function StatsPage() {
         <p className="text-muted-foreground">Complete leaderboard and player stats</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Top3StatCard
           title="Top Scorers"
           players={topScorers}
@@ -142,6 +145,12 @@ export default function StatsPage() {
           players={topMOTM}
           icon={Trophy}
           valueLabel="awards"
+        />
+        <Top3StatCard
+          title="Most Clean Sheets"
+          players={topCleanSheets}
+          icon={Shield}
+          valueLabel="clean sheets"
         />
       </div>
 
