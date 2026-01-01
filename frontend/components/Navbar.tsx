@@ -48,7 +48,7 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
             {userRole === "manager" && (
               <Link to="/manager" className="flex items-center gap-2 text-gray-300 hover:text-[#ffd700] transition-colors">
                 <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">Manager</span>
+                <span className="hidden sm:inline">Enter Results</span>
               </Link>
             )}
             
