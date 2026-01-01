@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Shield, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Shield, Trophy, Download } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import Top3StatCard from "@/components/Top3StatCard";
 
@@ -76,6 +77,35 @@ export default function StatsPage() {
     }
   };
 
+  const handleExportCSV = async () => {
+    try {
+      const backend = getAuthenticatedBackend();
+      const response = await backend.stats.exportStats();
+      
+      const blob = new Blob([response.csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `season-stats-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Success",
+        description: "Season statistics exported successfully",
+      });
+    } catch (error) {
+      console.error("Failed to export stats:", error);
+      toast({
+        title: "Error",
+        description: "Failed to export statistics",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSort = (field: SortField) => {
     if (sortBy === field) {
       setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
@@ -125,9 +155,18 @@ export default function StatsPage() {
   return (
     <div className="space-y-8 bg-[#0a1e3d] min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
-        <div>
-          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Player Statistics</h1>
-          <p className="text-gray-400">Complete leaderboard and player stats</p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Player Statistics</h1>
+            <p className="text-gray-400">Complete leaderboard and player stats</p>
+          </div>
+          <Button 
+            onClick={handleExportCSV}
+            className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e] font-semibold"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
         </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

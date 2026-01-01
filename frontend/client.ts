@@ -265,6 +265,7 @@ export namespace players {
 /**
  * Import the endpoint handlers to derive the types for the client.
  */
+import { exportStats as api_stats_export_exportStats } from "~backend/stats/export";
 import { leaderboard as api_stats_leaderboard_leaderboard } from "~backend/stats/leaderboard";
 import { playerStats as api_stats_player_playerStats } from "~backend/stats/player";
 import {
@@ -281,12 +282,19 @@ export namespace stats {
 
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
+            this.exportStats = this.exportStats.bind(this)
             this.leaderboard = this.leaderboard.bind(this)
             this.playerStats = this.playerStats.bind(this)
             this.topAssisters = this.topAssisters.bind(this)
             this.topCleanSheets = this.topCleanSheets.bind(this)
             this.topMOTM = this.topMOTM.bind(this)
             this.topScorers = this.topScorers.bind(this)
+        }
+
+        public async exportStats(): Promise<ResponseType<typeof api_stats_export_exportStats>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/stats/export`, {method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_stats_export_exportStats>
         }
 
         /**
