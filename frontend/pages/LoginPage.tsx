@@ -31,7 +31,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a1e3d] p-4">
       <div className="w-full max-w-md space-y-6">
-        <p className="text-center text-gray-400 text-sm italic px-4">
+        <p className="text-center text-[#ffd700] text-sm italic px-4 font-bold">
           Tracking the stats for a game that nobody can play but everyone can referee. A game that starts 30 minutes late and ends in a shouting match.
         </p>
         <Card className="w-full bg-[#0f2847] border-[#1a3a5c]">
