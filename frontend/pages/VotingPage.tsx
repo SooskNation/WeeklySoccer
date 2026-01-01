@@ -18,6 +18,7 @@ interface Game {
   date: string;
   blackScore: number;
   whiteScore: number;
+  motmFinalized: boolean;
 }
 
 interface PlayerStat {
@@ -67,9 +68,10 @@ export default function VotingPage() {
     try {
       const backend = getAuthenticatedBackend();
       const gamesData = await backend.games.list();
-      setGames(gamesData.games);
-      if (gamesData.games.length > 0) {
-        setSelectedGame(gamesData.games[0].id);
+      const unfinalizedGames = gamesData.games.filter(g => !g.motmFinalized);
+      setGames(unfinalizedGames);
+      if (unfinalizedGames.length > 0) {
+        setSelectedGame(unfinalizedGames[0].id);
       }
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -167,6 +169,11 @@ export default function VotingPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {games.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No games available for voting. All MOTM awards have been finalized.</p>
+            </div>
+          )}
           <div>
             <Label htmlFor="game">Select Game</Label>
             <Select

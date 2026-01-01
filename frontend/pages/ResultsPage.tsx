@@ -12,6 +12,8 @@ interface Game {
   blackScore: number;
   whiteScore: number;
   winner?: string;
+  motmFinalized: boolean;
+  motmPlayerName?: string;
 }
 
 interface PlayerStat {
@@ -122,8 +124,12 @@ export default function ResultsPage() {
         description: `${result.motmPlayerName} has been awarded MOTM`,
       });
 
-      const details = await backend.games.get({ id: gameId });
+      const [details, updatedGames] = await Promise.all([
+        backend.games.get({ id: gameId }),
+        backend.games.list()
+      ]);
       setGameDetails(new Map(gameDetails.set(gameId, details)));
+      setGames(updatedGames.games);
     } catch (error) {
       console.error("Failed to finalize voting:", error);
       toast({
@@ -171,6 +177,12 @@ export default function ResultsPage() {
                         {game.winner === 'Draw' && (
                           <span className="text-sm font-normal text-gray-400">
                             (Draw)
+                          </span>
+                        )}
+                        {game.motmFinalized && game.motmPlayerName && (
+                          <span className="flex items-center gap-1 text-sm font-normal text-[#ffd700]">
+                            <Trophy className="h-4 w-4" />
+                            MOTM: {game.motmPlayerName}
                           </span>
                         )}
                       </CardTitle>
@@ -279,7 +291,7 @@ export default function ResultsPage() {
                             <Trophy className="h-5 w-5" />
                             Voting Results (Aggregated)
                           </h3>
-                          {userRole === 'manager' && (
+                          {userRole === 'manager' && !game.motmFinalized && (
                             <Button
                               onClick={() => finalizeVoting(game.id)}
                               disabled={finalizingGame === game.id}
@@ -288,6 +300,9 @@ export default function ResultsPage() {
                               <CheckCircle className="h-4 w-4 mr-2" />
                               {finalizingGame === game.id ? "Finalizing..." : "Finalize MOTM"}
                             </Button>
+                          )}
+                          {game.motmFinalized && (
+                            <span className="text-sm text-gray-400 italic">Finalized</span>
                           )}
                         </div>
                         <div className="space-y-2">

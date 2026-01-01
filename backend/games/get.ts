@@ -24,6 +24,7 @@ interface Game {
   blackScore: number;
   whiteScore: number;
   winner?: string;
+  motmFinalized: boolean;
   stats: PlayerStat[];
 }
 
@@ -36,8 +37,9 @@ export const get = api<GetGameParams, Game>(
       game_date: string;
       black_score: number;
       white_score: number;
+      motm_finalized: boolean;
     }>`
-      SELECT game_id, to_char(game_date, 'YYYY-MM-DD') as game_date, black_score, white_score
+      SELECT game_id, to_char(game_date, 'YYYY-MM-DD') as game_date, black_score, white_score, COALESCE(motm_finalized, false) as motm_finalized
       FROM games
       WHERE game_id = ${id}
     `;
@@ -76,6 +78,7 @@ export const get = api<GetGameParams, Game>(
       whiteScore: game.white_score,
       winner: game.black_score > game.white_score ? 'Black' :
               game.white_score > game.black_score ? 'White' : 'Draw',
+      motmFinalized: game.motm_finalized,
       stats: statsRows.map(row => ({
         playerId: row.player_id,
         playerName: row.player_name,

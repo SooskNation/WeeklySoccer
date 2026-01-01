@@ -52,6 +52,12 @@ export const finalize = api<FinalizeVotingParams, FinalizeVotingResponse>(
       WHERE game_id = ${gameId}
     `;
 
+    await db.exec`
+      UPDATE games
+      SET motm_finalized = TRUE
+      WHERE game_id = ${gameId}
+    `;
+
     return {
       success: true,
       motmPlayerId: topPlayer.player_id,
