@@ -15,6 +15,8 @@ interface Game {
   winner?: string;
   motmFinalized: boolean;
   motmPlayerName?: string;
+  scorers: { name: string; goals: number }[];
+  assisters: { name: string; assists: number }[];
 }
 
 interface PlayerStat {
@@ -198,28 +200,54 @@ export default function ResultsPage() {
                       className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity w-full"
                       onClick={() => toggleGame(game.id)}
                     >
-                      <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white">
-                        <span className="text-gray-400 text-sm sm:text-base lg:text-lg">{typeof game.date === 'string' ? game.date : new Date(game.date).toISOString().split('T')[0]}</span>
-                        <span className="text-xl sm:text-2xl lg:text-3xl font-bold">
-                          <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
-                        </span>
-                        {game.winner !== 'Draw' && (
-                          <span className="text-xs sm:text-sm font-normal text-gray-400">
-                            ({game.winner} wins)
+                      <div className="space-y-2">
+                        <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white">
+                          <span className="text-gray-400 text-sm sm:text-base lg:text-lg">{typeof game.date === 'string' ? game.date : new Date(game.date).toISOString().split('T')[0]}</span>
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold">
+                            <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
                           </span>
+                          {game.winner !== 'Draw' && (
+                            <span className="text-xs sm:text-sm font-normal text-gray-400">
+                              ({game.winner} wins)
+                            </span>
+                          )}
+                          {game.winner === 'Draw' && (
+                            <span className="text-xs sm:text-sm font-normal text-gray-400">
+                              (Draw)
+                            </span>
+                          )}
+                          {game.motmFinalized && game.motmPlayerName && (
+                            <span className="flex items-center gap-1 text-xs sm:text-sm font-normal text-[#ffd700]">
+                              <Trophy className="h-3 w-3 sm:h-4 sm:w-4" />
+                              MOTM: {game.motmPlayerName}
+                            </span>
+                          )}
+                        </CardTitle>
+                        {(game.scorers.length > 0 || game.assisters.length > 0) && (
+                          <div className="text-xs sm:text-sm text-gray-400 flex flex-wrap gap-3">
+                            {game.scorers.length > 0 && (
+                              <div className="flex items-center gap-1.5">
+                                <img src="/soccer-ball.jpg" alt="Goals" className="h-4 w-4 rounded-full object-cover" />
+                                {game.scorers.map((s, i) => (
+                                  <span key={i}>
+                                    {s.name} ({s.goals}){i < game.scorers.length - 1 ? ',' : ''}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {game.assisters.length > 0 && (
+                              <div className="flex items-center gap-1.5">
+                                <img src="/assist.png" alt="Assists" className="h-3.5 w-3.5 object-contain" />
+                                {game.assisters.map((a, i) => (
+                                  <span key={i}>
+                                    {a.name} ({a.assists}){i < game.assisters.length - 1 ? ',' : ''}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         )}
-                        {game.winner === 'Draw' && (
-                          <span className="text-xs sm:text-sm font-normal text-gray-400">
-                            (Draw)
-                          </span>
-                        )}
-                        {game.motmFinalized && game.motmPlayerName && (
-                          <span className="flex items-center gap-1 text-xs sm:text-sm font-normal text-[#ffd700]">
-                            <Trophy className="h-3 w-3 sm:h-4 sm:w-4" />
-                            MOTM: {game.motmPlayerName}
-                          </span>
-                        )}
-                      </CardTitle>
+                      </div>
                     </div>
                     {userRole === 'manager' && (
                       <Link
