@@ -51,10 +51,10 @@ function AppInner() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-background text-foreground dark">
+      <div className="min-h-screen bg-[#0a1e3d] text-foreground dark">
         <Navbar onLogout={handleLogout} userRole={userRole} />
         <Layout>
-          <main className="container mx-auto px-4 py-8">
+          <main>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/stats" element={<StatsPage />} />

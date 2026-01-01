@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BarChart3, Trophy, Vote, Settings } from "lucide-react";
+import { BarChart3, Trophy, Calendar, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -38,7 +38,7 @@ export default function HomePage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-3 rounded-lg bg-[#1a3a5c]">
-                  <Trophy className="h-8 w-8 text-[#ffd700]" />
+                  <Calendar className="h-8 w-8 text-[#ffd700]" />
                 </div>
                 <h2 className="text-2xl font-bold text-white">Game Results</h2>
               </div>
@@ -55,7 +55,7 @@ export default function HomePage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-3 rounded-lg bg-[#1a3a5c]">
-                  <Vote className="h-8 w-8 text-[#ffd700]" />
+                  <Trophy className="h-8 w-8 text-[#ffd700]" />
                 </div>
                 <h2 className="text-2xl font-bold text-white">Vote MOTM</h2>
               </div>
