@@ -116,18 +116,19 @@ export default function StatsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-xl text-muted-foreground">Loading stats...</div>
+      <div className="flex items-center justify-center h-64 bg-[#0a1e3d] min-h-screen">
+        <div className="text-xl text-gray-400">Loading stats...</div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-4xl font-bold mb-2">Player Statistics</h1>
-        <p className="text-muted-foreground">Complete leaderboard and player stats</p>
-      </div>
+    <div className="space-y-8 bg-[#0a1e3d] min-h-screen p-6">
+      <div className="max-w-7xl mx-auto">
+        <div>
+          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Player Statistics</h1>
+          <p className="text-gray-400">Complete leaderboard and player stats</p>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Top3StatCard
@@ -154,17 +155,17 @@ export default function StatsPage() {
         />
       </div>
 
-      <Card>
+      <Card className="bg-[#0f2847] border-[#1a3a5c]">
         <CardHeader>
-          <CardTitle>Leaderboard</CardTitle>
+          <CardTitle className="text-[#ffd700]">Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-[#1a3a5c]">
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('playerName')}
                   >
                     <div className="flex items-center gap-1">
@@ -172,7 +173,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('gamesPlayed')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -180,7 +181,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('pointsPerGame')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -188,7 +189,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('totalPoints')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -196,7 +197,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('wins')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -204,7 +205,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('draws')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -212,7 +213,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('losses')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -220,7 +221,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('goals')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -228,7 +229,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('assists')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -236,7 +237,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('cleanSheets')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -245,7 +246,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('motm')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -254,7 +255,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('winPercentage')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -262,7 +263,7 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('goalsPerGame')}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -270,14 +271,14 @@ export default function StatsPage() {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-center cursor-pointer hover:bg-muted/50"
+                    className="text-center cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300"
                     onClick={() => handleSort('assistsPerGame')}
                   >
                     <div className="flex items-center justify-center gap-1">
                       A/GP <SortIcon field="assistsPerGame" />
                     </div>
                   </TableHead>
-                  <TableHead className="text-center">
+                  <TableHead className="text-center text-gray-300">
                     Last5
                   </TableHead>
                 </TableRow>
@@ -287,28 +288,28 @@ export default function StatsPage() {
                   const goalsPerGame = player.gamesPlayed > 0 ? (player.goals / player.gamesPlayed).toFixed(2) : '0.00';
                   const assistsPerGame = player.gamesPlayed > 0 ? (player.assists / player.gamesPlayed).toFixed(2) : '0.00';
                   return (
-                  <TableRow key={player.playerId} className="hover:bg-muted/50">
-                    <TableCell className="font-medium">
+                  <TableRow key={player.playerId} className="hover:bg-[#1a3a5c]/50 border-[#1a3a5c]">
+                    <TableCell className="font-medium text-white">
                       <Link 
                         to={`/player/${player.playerId}`}
-                        className="hover:text-primary transition-colors"
+                        className="hover:text-[#ffd700] transition-colors"
                       >
                         {player.playerName}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-center">{player.gamesPlayed}</TableCell>
-                    <TableCell className="text-center font-semibold">{player.pointsPerGame}</TableCell>
-                    <TableCell className="text-center">{player.totalPoints}</TableCell>
-                    <TableCell className="text-center">{player.wins}</TableCell>
-                    <TableCell className="text-center">{player.draws}</TableCell>
-                    <TableCell className="text-center">{player.losses}</TableCell>
-                    <TableCell className="text-center">{player.goals}</TableCell>
-                    <TableCell className="text-center">{player.assists}</TableCell>
-                    <TableCell className="text-center">{player.cleanSheets}</TableCell>
-                    <TableCell className="text-center">{player.motm}</TableCell>
-                    <TableCell className="text-center">{player.winPercentage}%</TableCell>
-                    <TableCell className="text-center">{goalsPerGame}</TableCell>
-                    <TableCell className="text-center">{assistsPerGame}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.gamesPlayed}</TableCell>
+                    <TableCell className="text-center font-semibold text-[#ffd700]">{player.pointsPerGame}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.totalPoints}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.wins}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.draws}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.losses}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.goals}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.assists}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.cleanSheets}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.motm}</TableCell>
+                    <TableCell className="text-center text-gray-300">{player.winPercentage}%</TableCell>
+                    <TableCell className="text-center text-gray-300">{goalsPerGame}</TableCell>
+                    <TableCell className="text-center text-gray-300">{assistsPerGame}</TableCell>
                     <TableCell className="text-center">
                       <div className="flex items-center justify-center gap-1">
                         {[...Array(5)].map((_, idx) => {
@@ -319,13 +320,13 @@ export default function StatsPage() {
                               key={idx}
                               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
                                 !result
-                                  ? 'bg-muted border border-border'
+                                  ? 'bg-[#1a3a5c] border border-[#2a4a6c]'
                                   : result === 'W'
                                   ? 'bg-green-500 text-white'
                                   : result === 'D'
                                   ? 'bg-gray-400 text-white'
                                   : 'bg-red-500 text-white'
-                              } ${isLatest ? 'ring-2 ring-foreground ring-offset-1' : ''}`}
+                              } ${isLatest ? 'ring-2 ring-[#ffd700] ring-offset-1 ring-offset-[#0f2847]' : ''}`}
                               title={!result ? 'No game' : result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
                             >
                             </div>
@@ -341,6 +342,7 @@ export default function StatsPage() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
