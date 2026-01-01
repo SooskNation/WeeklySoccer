@@ -29,35 +29,37 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a1e3d] p-4">
+      <Card className="w-full max-w-md bg-[#0f2847] border-[#1a3a5c]">
         <CardHeader>
-          <CardTitle>Soccer Stats Tracker</CardTitle>
-          <CardDescription>Login to continue</CardDescription>
+          <CardTitle className="text-[#ffd700]">Soccer Stats Tracker</CardTitle>
+          <CardDescription className="text-gray-400">Login to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username" className="text-white">Username</Label>
               <Input
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-white">Password</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] border border-[#2a4a6c]">
               Login
             </Button>
           </form>
