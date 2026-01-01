@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { Shirt, Trash2, GripVertical, Plus, Menu, X } from "lucide-react";
+import { Shirt, Trash2, GripVertical, Plus, Menu, X, HandHelping } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
@@ -450,7 +450,7 @@ export default function ManagerDashboard() {
                         className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                         title="Add assist"
                       >
-                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
+                        <HandHelping className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
                         <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
                       </button>
                       <button
@@ -527,7 +527,7 @@ export default function ManagerDashboard() {
                         className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                         title="Add assist"
                       >
-                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
+                        <HandHelping className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
                         <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
                       </button>
                       <button
