@@ -195,17 +195,17 @@ export default function StatsPage() {
         />
       </div>
 
-      <Card className="bg-[#0f2847] border-[#1a3a5c]">
+      <Card className="bg-[#0f2847] border-[#1a3a5c] mt-6">
         <CardHeader>
           <CardTitle className="text-base sm:text-lg lg:text-xl text-[#ffd700]">Leaderboard</CardTitle>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
-          <div className="overflow-x-auto -mx-4 sm:mx-0">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-[#1a3a5c]">
                   <TableHead 
-                    className="cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300 text-xs sm:text-sm sticky left-0 bg-[#0f2847] z-10"
+                    className="cursor-pointer hover:bg-[#1a3a5c]/50 text-gray-300 text-xs sm:text-sm sticky left-0 bg-[#0f2847] z-10 min-w-[100px]"
                     onClick={() => handleSort('playerName')}
                   >
                     <div className="flex items-center gap-1">
@@ -329,10 +329,10 @@ export default function StatsPage() {
                   const assistsPerGame = player.gamesPlayed > 0 ? (player.assists / player.gamesPlayed).toFixed(2) : '0.00';
                   return (
                   <TableRow key={player.playerId} className="hover:bg-[#1a3a5c]/50 border-[#1a3a5c]">
-                    <TableCell className="font-medium text-white text-xs sm:text-sm sticky left-0 bg-[#0f2847] z-10">
+                    <TableCell className="font-medium text-white text-xs sm:text-sm sticky left-0 bg-[#0f2847] z-10 min-w-[100px]">
                       <Link 
                         to={`/player/${player.playerId}`}
-                        className="hover:text-[#ffd700] transition-colors"
+                        className="hover:text-[#ffd700] transition-colors block truncate"
                       >
                         {player.playerName}
                       </Link>
