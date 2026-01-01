@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trophy, Edit, CheckCircle, Download } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Game {
   id: number;
@@ -113,7 +114,7 @@ export default function ResultsPage() {
     }
   };
 
-  const finalizeVoting = async (gameId: number) => {
+  const performFinalizeVoting = async (gameId: number) => {
     setFinalizingGame(gameId);
     try {
       const backend = getAuthenticatedBackend();
@@ -141,6 +142,8 @@ export default function ResultsPage() {
       setFinalizingGame(null);
     }
   };
+
+  const [finalizeVoting] = useSubmitOnce(performFinalizeVoting);
 
   const exportToCSV = async () => {
     try {

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Trash2, GripVertical, Shirt, Menu, X } from "lucide-react";
+import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
   id: number;
@@ -272,7 +273,7 @@ export default function ModifyResultsPage() {
     }
   };
 
-  const handleSubmit = async () => {
+  const updateGame = async () => {
     try {
       const stats = Array.from(playerStats.values());
       const scores = calculateScores();
@@ -310,6 +311,8 @@ export default function ModifyResultsPage() {
       });
     }
   };
+
+  const [handleSubmit] = useSubmitOnce(updateGame);
 
   const availablePlayers = players.filter(
     p => !blackTeam.includes(p.id) && !whiteTeam.includes(p.id)

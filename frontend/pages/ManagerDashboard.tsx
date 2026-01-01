@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { Shirt, Trash2, GripVertical, Plus, Menu, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
   id: number;
@@ -207,7 +208,7 @@ export default function ManagerDashboard() {
     }
   };
 
-  const handleAddPlayer = async () => {
+  const addPlayer = async () => {
     if (!newPlayerName.trim()) {
       toast({
         title: "Error",
@@ -244,7 +245,9 @@ export default function ManagerDashboard() {
     }
   };
 
-  const handleSubmit = async () => {
+  const [handleAddPlayer] = useSubmitOnce(addPlayer);
+
+  const submitGame = async () => {
     try {
       const stats = Array.from(playerStats.values());
       const scores = calculateScores();
@@ -283,6 +286,8 @@ export default function ManagerDashboard() {
       });
     }
   };
+
+  const [handleSubmit] = useSubmitOnce(submitGame);
 
   const availablePlayers = players.filter(
     p => !blackTeam.includes(p.id) && !whiteTeam.includes(p.id)

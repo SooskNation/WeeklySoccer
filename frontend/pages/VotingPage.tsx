@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Trophy, Users } from "lucide-react";
+import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
   id: number;
@@ -104,7 +105,7 @@ export default function VotingPage() {
     }
   };
 
-  const handleSubmit = async () => {
+  const submitVote = async () => {
     if (!selectedGame || !voterId || !firstChoice) {
       toast({
         title: "Error",
@@ -138,6 +139,8 @@ export default function VotingPage() {
       });
     }
   };
+
+  const [handleSubmit] = useSubmitOnce(submitVote);
 
   const getPlayersWhoPlayed = (): Player[] => {
     if (!gameDetails) return [];
