@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import backend from "~backend/client";
 
 interface LoginPageProps {
-  onLogin: (role: "player" | "manager", playerID?: number) => void;
+  onLogin: (role: "player" | "manager", playerID?: number, redirectPath?: string) => void;
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
+  const [showAdminLogin, setShowAdminLogin] = useState(!!redirectPath);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +25,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     try {
       const response = await backend.auth.login({ username, password });
       localStorage.setItem("authToken", response.token);
-      onLogin(response.role, response.playerID);
+      onLogin(response.role, response.playerID, redirectPath || undefined);
     } catch (err) {
       setError("Invalid credentials");
       console.error(err);

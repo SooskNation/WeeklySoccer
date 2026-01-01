@@ -37,13 +37,13 @@ function AppContent() {
     }
   }, []);
 
-  const handleLogin = (role: "player" | "manager", pid?: number) => {
+  const handleLogin = (role: "player" | "manager", pid?: number, redirectPath?: string) => {
     setIsAuthenticated(true);
     setUserRole(role);
     setPlayerID(pid);
     localStorage.setItem("userRole", role);
     if (pid) localStorage.setItem("playerID", pid.toString());
-    navigate("/");
+    navigate(redirectPath || "/");
   };
 
   const handleLogout = async () => {
@@ -55,23 +55,26 @@ function AppContent() {
     localStorage.removeItem("authToken");
   };
 
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
-
   return (
       <div className="min-h-screen bg-[#0a1e3d] text-foreground dark">
-        <Navbar onLogout={handleLogout} userRole={userRole} />
+        {isAuthenticated && <Navbar onLogout={handleLogout} userRole={userRole} />}
         <Layout>
           <main>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/stats" element={<StatsPage />} />
-              <Route path="/player/:id" element={<PlayerProfilePage />} />
-              <Route path="/manager" element={<ManagerDashboard />} />
-              <Route path="/vote" element={<VotingPage />} />
-              <Route path="/results" element={<ResultsPage />} />
-              <Route path="/modify-results/:gameId" element={<ModifyResultsPage />} />
+              <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+              {isAuthenticated ? (
+                <>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/stats" element={<StatsPage />} />
+                  <Route path="/player/:id" element={<PlayerProfilePage />} />
+                  <Route path="/manager" element={<ManagerDashboard />} />
+                  <Route path="/vote" element={<VotingPage />} />
+                  <Route path="/results" element={<ResultsPage />} />
+                  <Route path="/modify-results/:gameId" element={<ModifyResultsPage />} />
+                </>
+              ) : (
+                <Route path="*" element={<LoginPage onLogin={handleLogin} />} />
+              )}
             </Routes>
           </main>
         </Layout>

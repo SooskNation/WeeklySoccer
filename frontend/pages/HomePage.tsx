@@ -79,7 +79,7 @@ export default function HomePage() {
               <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
                 Enter and manage game results, edit teams, and update stats
               </p>
-              <Link to="/manager">
+              <Link to="/login?redirect=/manager">
                 <Button className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] font-bold border border-[#2a4a6c]">Enter Results</Button>
               </Link>
             </CardContent>
