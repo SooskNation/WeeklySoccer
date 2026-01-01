@@ -74,13 +74,13 @@ export default function HomePage() {
                 <div className="p-3 rounded-lg bg-[#1a3a5c]">
                   <Settings className="h-8 w-8 text-[#ffd700]" />
                 </div>
-                <h2 className="text-2xl font-bold text-white">Manager Tools</h2>
+                <h2 className="text-2xl font-bold text-white">Enter Match Results</h2>
               </div>
               <p className="text-gray-400 mb-6">
                 Enter and manage game results, edit teams, and update stats
               </p>
               <Link to="/manager">
-                <Button className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] font-bold border border-[#2a4a6c]">Manage Games</Button>
+                <Button className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] font-bold border border-[#2a4a6c]">Enter Results</Button>
               </Link>
             </CardContent>
           </Card>
