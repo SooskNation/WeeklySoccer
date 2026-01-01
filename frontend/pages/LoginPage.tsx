@@ -10,11 +10,12 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -26,6 +27,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       setError("Invalid credentials");
       console.error(err);
     }
+  };
+
+  const handlePlayerEnter = () => {
+    onLogin("player", undefined);
   };
 
   return (
@@ -40,33 +45,61 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <CardDescription className="text-gray-400">Login to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-white">Username</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
-              />
+          {!showAdminLogin ? (
+            <div className="space-y-4">
+              <Button 
+                onClick={handlePlayerEnter} 
+                className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] border border-[#2a4a6c]"
+              >
+                Enter
+              </Button>
+              <Button 
+                onClick={() => setShowAdminLogin(true)} 
+                variant="outline"
+                className="w-full bg-transparent text-[#ffd700] border-[#ffd700] hover:bg-[#ffd700]/10"
+              >
+                Admin Login
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
-              />
-            </div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] border border-[#2a4a6c]">
-              Login
-            </Button>
-          </form>
+          ) : (
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username" className="text-white">Username</Label>
+                <Input
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-white">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="bg-[#1a3a5c] border-[#2a4a6c] text-white"
+                />
+              </div>
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <div className="space-y-2">
+                <Button type="submit" className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] border border-[#2a4a6c]">
+                  Login
+                </Button>
+                <Button 
+                  type="button"
+                  onClick={() => setShowAdminLogin(false)} 
+                  variant="outline"
+                  className="w-full bg-transparent text-gray-400 border-[#2a4a6c] hover:bg-[#1a3a5c]"
+                >
+                  Back
+                </Button>
+              </div>
+            </form>
+          )}
         </CardContent>
       </Card>
       </div>
