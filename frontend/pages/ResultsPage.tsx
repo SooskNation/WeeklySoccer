@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Edit, CheckCircle, Download } from "lucide-react";
+import { Trophy, Edit, CheckCircle, Download, HandHelping } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
@@ -237,7 +237,7 @@ export default function ResultsPage() {
                             )}
                             {game.assisters.length > 0 && (
                               <div className="flex items-center gap-1.5">
-                                <img src="/assist.png" alt="Assists" className="h-3.5 w-3.5 object-contain" />
+                                <HandHelping className="h-3.5 w-3.5" />
                                 {game.assisters.map((a, i) => (
                                   <span key={i}>
                                     {a.name} ({a.assists}){i < game.assisters.length - 1 ? ',' : ''}
@@ -288,7 +288,7 @@ export default function ResultsPage() {
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/assist.png" alt="Assist" className="h-3.5 w-3.5 object-contain" />
+                                        <HandHelping className="h-4 w-4" />
                                         {stat.assists}
                                       </span>
                                     )}
@@ -328,7 +328,7 @@ export default function ResultsPage() {
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <img src="/assist.png" alt="Assist" className="h-3.5 w-3.5 object-contain" />
+                                        <HandHelping className="h-4 w-4" />
                                         {stat.assists}
                                       </span>
                                     )}

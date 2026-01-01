@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { Trophy, Users } from "lucide-react";
+import { Trophy, Users, HandHelping } from "lucide-react";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
@@ -218,7 +218,7 @@ export default function VotingPage() {
                             )}
                             {stat.assists > 0 && (
                               <span className="ml-1">
-                                <img src="/assist.png" alt="Assist" className="inline h-4 w-4 object-contain" />
+                                <HandHelping className="inline h-4 w-4" />
                                 {stat.assists}
                               </span>
                             )}
@@ -243,7 +243,7 @@ export default function VotingPage() {
                             )}
                             {stat.assists > 0 && (
                               <span className="ml-1">
-                                <img src="/assist.png" alt="Assist" className="inline h-4 w-4 object-contain" />
+                                <HandHelping className="inline h-4 w-4" />
                                 {stat.assists}
                               </span>
                             )}
