@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Edit, CheckCircle } from "lucide-react";
+import { Trophy, Edit, CheckCircle, Download } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Game {
@@ -142,12 +142,50 @@ export default function ResultsPage() {
     }
   };
 
+  const exportToCSV = async () => {
+    try {
+      const backend = getAuthenticatedBackend();
+      const response = await backend.games.exportGames();
+      
+      const blob = new Blob([response.csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `game-results-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Export Successful",
+        description: "Game results have been exported to CSV",
+      });
+    } catch (error) {
+      console.error("Failed to export:", error);
+      toast({
+        title: "Error",
+        description: "Failed to export game results",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="bg-[#0a1e3d] min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Game Results</h1>
-          <p className="text-gray-400">View match history and statistics</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Game Results</h1>
+            <p className="text-gray-400">View match history and statistics</p>
+          </div>
+          <Button
+            onClick={exportToCSV}
+            className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export to CSV
+          </Button>
         </div>
 
         <div className="space-y-4">

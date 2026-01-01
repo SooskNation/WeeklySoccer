@@ -134,6 +134,7 @@ export namespace auth {
  * Import the endpoint handlers to derive the types for the client.
  */
 import { create as api_games_create_create } from "~backend/games/create";
+import { exportGames as api_games_export_exportGames } from "~backend/games/export";
 import { get as api_games_get_get } from "~backend/games/get";
 import { list as api_games_list_list } from "~backend/games/list";
 import { update as api_games_update_update } from "~backend/games/update";
@@ -146,6 +147,7 @@ export namespace games {
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
             this.create = this.create.bind(this)
+            this.exportGames = this.exportGames.bind(this)
             this.get = this.get.bind(this)
             this.list = this.list.bind(this)
             this.update = this.update.bind(this)
@@ -158,6 +160,12 @@ export namespace games {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/games`, {method: "POST", body: JSON.stringify(params)})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_games_create_create>
+        }
+
+        public async exportGames(): Promise<ResponseType<typeof api_games_export_exportGames>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/games/export`, {method: "GET", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_games_export_exportGames>
         }
 
         /**
