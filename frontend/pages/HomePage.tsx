@@ -9,7 +9,7 @@ export default function HomePage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 text-[#ffd700]">
-            Soccer Stats Tracker
+            Sunday Soccer Stats Tracker
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 px-4">
             Track your weekly soccer stats, vote for Man of the Match, and manage results

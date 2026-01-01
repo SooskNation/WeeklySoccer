@@ -25,7 +25,7 @@ export default function Navbar({ onLogout, userRole }: NavbarProps) {
         <div className="flex items-center justify-between h-14 sm:h-16">
           <Link to="/" className="flex items-center gap-1.5 sm:gap-2 text-base sm:text-lg lg:text-xl font-bold text-white">
             <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-[#ffd700]" />
-            <span className="hidden sm:inline">Soccer Stats Tracker</span>
+            <span className="hidden sm:inline">Sunday Soccer Stats Tracker</span>
             <span className="sm:hidden">Soccer Stats</span>
           </Link>
           

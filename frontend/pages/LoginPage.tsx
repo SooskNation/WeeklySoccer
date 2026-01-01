@@ -36,7 +36,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </p>
         <Card className="w-full bg-[#0f2847] border-[#1a3a5c]">
         <CardHeader>
-          <CardTitle className="text-[#ffd700]">Soccer Stats Tracker</CardTitle>
+          <CardTitle className="text-[#ffd700]">Sunday Soccer Stats Tracker</CardTitle>
           <CardDescription className="text-gray-400">Login to continue</CardDescription>
         </CardHeader>
         <CardContent>

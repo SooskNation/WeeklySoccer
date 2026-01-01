@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-3 text-[#ffd700]">Soccer Stats Tracker</h3>
+              <h3 className="font-bold text-lg mb-3 text-[#ffd700]">Sunday Soccer Stats Tracker</h3>
               <p className="text-sm text-gray-400">
                 Track your team's performance, vote for man of the match, and view comprehensive statistics.
               </p>
