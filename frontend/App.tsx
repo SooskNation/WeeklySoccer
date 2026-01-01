@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import Layout from "@/components/Layout";
@@ -14,6 +14,15 @@ import LoginPage from "@/pages/LoginPage";
 import "@/styles/theme.css";
 
 function AppInner() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+function AppContent() {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<"player" | "manager" | null>(null);
   const [playerID, setPlayerID] = useState<number | undefined>();
@@ -34,6 +43,7 @@ function AppInner() {
     setPlayerID(pid);
     localStorage.setItem("userRole", role);
     if (pid) localStorage.setItem("playerID", pid.toString());
+    navigate("/");
   };
 
   const handleLogout = async () => {
@@ -50,7 +60,6 @@ function AppInner() {
   }
 
   return (
-    <BrowserRouter>
       <div className="min-h-screen bg-[#0a1e3d] text-foreground dark">
         <Navbar onLogout={handleLogout} userRole={userRole} />
         <Layout>
@@ -68,7 +77,6 @@ function AppInner() {
         </Layout>
         <Toaster />
       </div>
-    </BrowserRouter>
   );
 }
 
