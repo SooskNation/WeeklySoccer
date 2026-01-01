@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { Trash2, GripVertical } from "lucide-react";
+import { Trash2, GripVertical, Shirt } from "lucide-react";
 
 interface Player {
   id: number;
@@ -340,6 +340,20 @@ export default function ModifyResultsPage() {
             >
               <GripVertical className="h-5 w-5 text-gray-400" />
               <span className="font-medium text-white flex-1">{player.name}</span>
+              <button
+                onClick={() => movePlayerToTeam(player.id, 'white')}
+                className="p-1.5 hover:bg-white/20 rounded transition-colors"
+                title="Add to White Team"
+              >
+                <Shirt className="h-5 w-5 text-white" />
+              </button>
+              <button
+                onClick={() => movePlayerToTeam(player.id, 'black')}
+                className="p-1.5 hover:bg-black/40 rounded transition-colors"
+                title="Add to Black Team"
+              >
+                <Shirt className="h-5 w-5 text-black fill-black" />
+              </button>
             </div>
           ))}
           {availablePlayers.length === 0 && (
