@@ -19,7 +19,7 @@ export const login = api<LoginRequest, LoginResponse>(
     const user = await db.queryRow`
       SELECT id, username, role, player_id 
       FROM users 
-      WHERE username = ${req.username} AND password = ${req.password}
+      WHERE LOWER(username) = LOWER(${req.username}) AND LOWER(password) = LOWER(${req.password})
     `;
 
     if (!user) {
