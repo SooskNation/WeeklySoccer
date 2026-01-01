@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { Trophy, Users, HandHelping } from "lucide-react";
+import { Trophy, Users } from "lucide-react";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {

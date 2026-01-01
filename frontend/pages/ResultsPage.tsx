@@ -288,7 +288,7 @@ export default function ResultsPage() {
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <HandHelping className="h-4 w-4" />
+                                        <img src="/assist.png" alt="Assist" className="h-3.5 w-3.5 object-contain" />
                                         {stat.assists}
                                       </span>
                                     )}
@@ -328,7 +328,7 @@ export default function ResultsPage() {
                                     )}
                                     {stat.assists > 0 && (
                                       <span className="flex items-center gap-1 text-gray-300">
-                                        <HandHelping className="h-4 w-4" />
+                                        <img src="/assist.png" alt="Assist" className="h-3.5 w-3.5 object-contain" />
                                         {stat.assists}
                                       </span>
                                     )}

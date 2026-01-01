@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { Trash2, GripVertical, Shirt, Menu, X, HandHelping } from "lucide-react";
+import { Trash2, GripVertical, Shirt, Menu, X } from "lucide-react";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
@@ -450,7 +450,7 @@ export default function ModifyResultsPage() {
                         className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                         title="Add assist"
                       >
-                        <HandHelping className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
+                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
                         <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
                       </button>
                       <button
@@ -527,7 +527,7 @@ export default function ModifyResultsPage() {
                         className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
                         title="Add assist"
                       >
-                        <HandHelping className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
+                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
                         <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
                       </button>
                       <button
