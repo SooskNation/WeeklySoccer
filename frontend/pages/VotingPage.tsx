@@ -155,11 +155,11 @@ export default function VotingPage() {
   const getWhiteTeam = () => gameDetails?.stats.filter(s => s.team === 'White') || [];
 
   return (
-    <div className="bg-[#0a1e3d] min-h-screen p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="bg-[#0a1e3d] min-h-screen p-4 sm:p-6">
+      <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Vote for Man of the Match</h1>
-          <p className="text-gray-400">Cast your ranked vote for the best player</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-[#ffd700]">Vote for Man of the Match</h1>
+          <p className="text-sm sm:text-base text-gray-400">Cast your ranked vote for the best player</p>
         </div>
 
         <Card className="bg-[#0f2847] border-[#1a3a5c]">
@@ -169,7 +169,7 @@ export default function VotingPage() {
               Ranked Voting
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             {games.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-gray-400">No games available for voting. All MOTM awards have been finalized.</p>
@@ -196,14 +196,14 @@ export default function VotingPage() {
 
             {gameDetails && (
               <Card className="bg-[#1a3a5c] border-[#2a4a6c]">
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-2 gap-6">
+                <CardContent className="pt-4 sm:pt-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <h3 className="font-semibold mb-3 flex items-center gap-2 text-white">
-                        <div className="w-4 h-4 bg-black rounded border border-white" />
+                      <h3 className="font-semibold mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base text-white">
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 bg-black rounded border border-white" />
                         Black Team ({gameDetails.blackScore})
                       </h3>
-                      <ul className="space-y-1 text-sm text-gray-300">
+                      <ul className="space-y-1 text-xs sm:text-sm text-gray-300">
                         {getBlackTeam().map(stat => (
                           <li key={stat.playerId}>
                             {stat.playerName}
@@ -224,11 +224,11 @@ export default function VotingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-3 flex items-center gap-2 text-white">
-                        <div className="w-4 h-4 bg-white border border-gray-300 rounded" />
+                      <h3 className="font-semibold mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base text-white">
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 bg-white border border-gray-300 rounded" />
                         White Team ({gameDetails.whiteScore})
                       </h3>
-                      <ul className="space-y-1 text-sm text-gray-300">
+                      <ul className="space-y-1 text-xs sm:text-sm text-gray-300">
                         {getWhiteTeam().map(stat => (
                           <li key={stat.playerId}>
                             {stat.playerName}
@@ -250,7 +250,7 @@ export default function VotingPage() {
                     </div>
                   </div>
                   {gameDetails.winner && (
-                    <div className="mt-4 pt-4 border-t border-[#2a4a6c] text-center font-semibold text-[#ffd700]">
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-[#2a4a6c] text-center font-semibold text-sm sm:text-base text-[#ffd700]">
                       Winner: {gameDetails.winner}
                     </div>
                   )}
@@ -278,9 +278,9 @@ export default function VotingPage() {
               </Select>
             </div>
 
-            <div className="space-y-4 border-t border-[#2a4a6c] pt-4">
-              <div className="p-4 rounded-lg bg-[#1a3a5c] border-2 border-[#ffd700]">
-                <Label htmlFor="first" className="text-base font-semibold text-white">
+            <div className="space-y-3 sm:space-y-4 border-t border-[#2a4a6c] pt-3 sm:pt-4">
+              <div className="p-3 sm:p-4 rounded-lg bg-[#1a3a5c] border-2 border-[#ffd700]">
+                <Label htmlFor="first" className="text-sm sm:text-base font-semibold text-white">
                   🥇 First Choice (3 points)
                 </Label>
                 <Select
@@ -300,8 +300,8 @@ export default function VotingPage() {
                 </Select>
               </div>
 
-              <div className="p-4 rounded-lg bg-[#1a3a5c]/50 border border-[#2a4a6c]">
-                <Label htmlFor="second" className="text-base text-gray-300">
+              <div className="p-3 sm:p-4 rounded-lg bg-[#1a3a5c]/50 border border-[#2a4a6c]">
+                <Label htmlFor="second" className="text-sm sm:text-base text-gray-300">
                   🥈 Second Choice (2 points)
                 </Label>
                 <Select
@@ -322,8 +322,8 @@ export default function VotingPage() {
                 </Select>
               </div>
 
-              <div className="p-4 rounded-lg bg-[#1a3a5c]/50 border border-[#2a4a6c]">
-                <Label htmlFor="third" className="text-base text-gray-300">
+              <div className="p-3 sm:p-4 rounded-lg bg-[#1a3a5c]/50 border border-[#2a4a6c]">
+                <Label htmlFor="third" className="text-sm sm:text-base text-gray-300">
                   🥉 Third Choice (1 point)
                 </Label>
                 <Select

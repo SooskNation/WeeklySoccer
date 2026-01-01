@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { Shirt, Trash2, GripVertical, Plus } from "lucide-react";
+import { Shirt, Trash2, GripVertical, Plus, Menu, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Player {
@@ -35,6 +35,7 @@ export default function ManagerDashboard() {
   const [newPlayerName, setNewPlayerName] = useState("");
   const [newPlayerRole, setNewPlayerRole] = useState("Player");
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
+  const [showPlayers, setShowPlayers] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -290,8 +291,16 @@ export default function ManagerDashboard() {
   const scores = calculateScores();
 
   return (
-    <div className="flex gap-6 bg-[#0a1e3d] min-h-screen p-6">
-      <Card className="w-72 flex-shrink-0 bg-[#0f2847] border-[#1a3a5c]">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 bg-[#0a1e3d] min-h-screen p-4 sm:p-6">
+      <Button
+        onClick={() => setShowPlayers(!showPlayers)}
+        className="lg:hidden bg-[#1a3a5c] hover:bg-[#234a6f] text-white mb-2"
+      >
+        {showPlayers ? <X className="h-4 w-4 mr-2" /> : <Menu className="h-4 w-4 mr-2" />}
+        {showPlayers ? "Hide" : "Show"} Players
+      </Button>
+
+      <Card className={`w-full lg:w-72 flex-shrink-0 bg-[#0f2847] border-[#1a3a5c] ${showPlayers ? 'block' : 'hidden lg:block'}`}>
         <CardHeader>
           <CardTitle className="text-[#ffd700]">Available Players</CardTitle>
         </CardHeader>
@@ -362,10 +371,10 @@ export default function ManagerDashboard() {
         </CardContent>
       </Card>
 
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Manager Dashboard</h1>
-          <p className="text-gray-400">Create and manage game results</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-[#ffd700]">Manager Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-400">Create and manage game results</p>
         </div>
 
         <Card className="bg-[#0f2847] border-[#1a3a5c]">
@@ -386,15 +395,15 @@ export default function ManagerDashboard() {
           </CardContent>
         </Card>
 
-        <div className="flex items-center justify-center gap-8 py-6">
+        <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 py-4 sm:py-6">
           <div className="text-center">
-            <div className="text-sm text-gray-400 mb-2">Black Team</div>
-            <div className="text-6xl font-bold text-white">{scores.black}</div>
+            <div className="text-xs sm:text-sm text-gray-400 mb-1 sm:mb-2">Black Team</div>
+            <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white">{scores.black}</div>
           </div>
-          <div className="text-4xl text-[#ffd700] font-bold">-</div>
+          <div className="text-2xl sm:text-3xl lg:text-4xl text-[#ffd700] font-bold">-</div>
           <div className="text-center">
-            <div className="text-sm text-gray-400 mb-2">White Team</div>
-            <div className="text-6xl font-bold text-white">{scores.white}</div>
+            <div className="text-xs sm:text-sm text-gray-400 mb-1 sm:mb-2">White Team</div>
+            <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white">{scores.white}</div>
           </div>
         </div>
 
@@ -420,53 +429,56 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-2">
-                    <span className="font-medium text-white flex-1">{player.name}</span>
-                    <button
-                      onClick={() => incrementStat(playerId, 'goals')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add goal"
-                    >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
-                      <span className="text-sm font-medium text-white">{stat.goals}</span>
-                    </button>
-                    <button
-                      onClick={() => incrementStat(playerId, 'assists')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add assist"
-                    >
-                      <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
-                      <span className="text-sm font-medium text-white">{stat.assists}</span>
-                    </button>
-                    <button
-                      onClick={() => incrementStat(playerId, 'ownGoals')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add own goal"
-                    >
-                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
-                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
-                    </button>
-                    <button
-                      onClick={() => toggleCaptain(playerId)}
-                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
-                      title="Captain"
-                    >
-                      C
-                    </button>
-                    <button
-                      onClick={() => toggleGoalkeeper(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Goalkeeper"
-                    >
-                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
-                    </button>
-                    <button
-                      onClick={() => removeFromTeam(playerId)}
-                      className="p-1 hover:bg-red-600/20 rounded transition-colors"
-                      title="Remove"
-                    >
-                      <Trash2 className="h-5 w-5 text-red-400" />
-                    </button>
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-2 sm:px-3 py-2 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <span className="font-medium text-white flex-1 mb-1 sm:mb-0">{player.name}</span>
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <button
+                        onClick={() => incrementStat(playerId, 'goals')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add goal"
+                      >
+                        <img src="/soccer-ball.jpg" alt="G" className="h-4 sm:h-5 w-4 sm:w-5 rounded-full object-cover" />
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.goals}</span>
+                      </button>
+                      <button
+                        onClick={() => incrementStat(playerId, 'assists')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add assist"
+                      >
+                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
+                      </button>
+                      <button
+                        onClick={() => incrementStat(playerId, 'ownGoals')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add own goal"
+                      >
+                        <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.ownGoals}</span>
+                      </button>
+                      <button
+                        onClick={() => toggleCaptain(playerId)}
+                        className={`p-1 rounded transition-colors font-bold text-xs sm:text-sm w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
+                        title="Captain"
+                      >
+                        C
+                      </button>
+                      <button
+                        onClick={() => toggleGoalkeeper(playerId)}
+                        className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                        title="Goalkeeper"
+                      >
+                        <span className="text-xs sm:hidden font-bold text-white">GK</span>
+                        <img src="/gloves.png" alt="GK" className="hidden sm:block h-5 w-5 object-contain" />
+                      </button>
+                      <button
+                        onClick={() => removeFromTeam(playerId)}
+                        className="p-1 hover:bg-red-600/20 rounded transition-colors"
+                        title="Remove"
+                      >
+                        <Trash2 className="h-4 sm:h-5 w-4 sm:w-5 text-red-400" />
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -494,53 +506,56 @@ export default function ManagerDashboard() {
                 if (!player || !stat) return null;
 
                 return (
-                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-3 py-2 flex items-center gap-2">
-                    <span className="font-medium text-white flex-1">{player.name}</span>
-                    <button
-                      onClick={() => incrementStat(playerId, 'goals')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add goal"
-                    >
-                      <img src="/soccer-ball.jpg" alt="Goal" className="h-5 w-5 rounded-full object-cover" />
-                      <span className="text-sm font-medium text-white">{stat.goals}</span>
-                    </button>
-                    <button
-                      onClick={() => incrementStat(playerId, 'assists')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add assist"
-                    >
-                      <img src="/assist.png" alt="Assist" className="h-5 w-5 object-contain" />
-                      <span className="text-sm font-medium text-white">{stat.assists}</span>
-                    </button>
-                    <button
-                      onClick={() => incrementStat(playerId, 'ownGoals')}
-                      className="flex items-center gap-1 px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
-                      title="Add own goal"
-                    >
-                      <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
-                      <span className="text-sm font-medium text-white">{stat.ownGoals}</span>
-                    </button>
-                    <button
-                      onClick={() => toggleCaptain(playerId)}
-                      className={`p-1 rounded transition-colors font-bold text-sm w-6 h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
-                      title="Captain"
-                    >
-                      C
-                    </button>
-                    <button
-                      onClick={() => toggleGoalkeeper(playerId)}
-                      className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
-                      title="Goalkeeper"
-                    >
-                      <img src="/gloves.png" alt="Goalkeeper" className="h-5 w-5 object-contain" />
-                    </button>
-                    <button
-                      onClick={() => removeFromTeam(playerId)}
-                      className="p-1 hover:bg-red-600/20 rounded transition-colors"
-                      title="Remove"
-                    >
-                      <Trash2 className="h-5 w-5 text-red-400" />
-                    </button>
+                  <div key={playerId} className="bg-[#1a3a5c] rounded-lg px-2 sm:px-3 py-2 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <span className="font-medium text-white flex-1 mb-1 sm:mb-0">{player.name}</span>
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <button
+                        onClick={() => incrementStat(playerId, 'goals')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add goal"
+                      >
+                        <img src="/soccer-ball.jpg" alt="G" className="h-4 sm:h-5 w-4 sm:w-5 rounded-full object-cover" />
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.goals}</span>
+                      </button>
+                      <button
+                        onClick={() => incrementStat(playerId, 'assists')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add assist"
+                      >
+                        <img src="/assist.png" alt="A" className="h-4 sm:h-5 w-4 sm:w-5 object-contain" />
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.assists}</span>
+                      </button>
+                      <button
+                        onClick={() => incrementStat(playerId, 'ownGoals')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 hover:bg-[#234a6f] rounded transition-colors"
+                        title="Add own goal"
+                      >
+                        <span className="text-xs font-bold text-red-400 border border-red-400 rounded px-1">OG</span>
+                        <span className="text-xs sm:text-sm font-medium text-white">{stat.ownGoals}</span>
+                      </button>
+                      <button
+                        onClick={() => toggleCaptain(playerId)}
+                        className={`p-1 rounded transition-colors font-bold text-xs sm:text-sm w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center ${stat.isCaptain ? 'bg-[#ffd700] text-[#0a1e3d]' : 'bg-[#234a6f] text-gray-300 hover:bg-[#2a5a8f]'}`}
+                        title="Captain"
+                      >
+                        C
+                      </button>
+                      <button
+                        onClick={() => toggleGoalkeeper(playerId)}
+                        className={`p-1 rounded transition-colors ${stat.isGoalkeeper ? 'bg-[#ffd700]' : 'hover:bg-[#234a6f]'}`}
+                        title="Goalkeeper"
+                      >
+                        <span className="text-xs sm:hidden font-bold text-white">GK</span>
+                        <img src="/gloves.png" alt="GK" className="hidden sm:block h-5 w-5 object-contain" />
+                      </button>
+                      <button
+                        onClick={() => removeFromTeam(playerId)}
+                        className="p-1 hover:bg-red-600/20 rounded transition-colors"
+                        title="Remove"
+                      >
+                        <Trash2 className="h-4 sm:h-5 w-4 sm:w-5 text-red-400" />
+                      </button>
+                    </div>
                   </div>
                 );
               })}

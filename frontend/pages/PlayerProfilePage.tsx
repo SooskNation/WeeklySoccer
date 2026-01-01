@@ -129,21 +129,22 @@ export default function PlayerProfilePage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-4 sm:p-6">
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between">
+        <CardHeader className="flex flex-col sm:flex-row items-start justify-between gap-3">
           <div>
-            <CardTitle className="text-3xl">{player.name}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl">{player.name}</CardTitle>
             {player.nickname && (
               <p className="text-muted-foreground mt-1">"{player.nickname}"</p>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button onClick={downloadCSV} variant="outline" size="sm">
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button onClick={downloadCSV} variant="outline" size="sm" className="flex-1 sm:flex-none">
               <Download className="h-4 w-4 mr-2" />
-              Export CSV
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">CSV</span>
             </Button>
-            <Button onClick={() => setEditing(!editing)} variant="outline" size="sm">
+            <Button onClick={() => setEditing(!editing)} variant="outline" size="sm" className="flex-1 sm:flex-none">
               <Edit className="h-4 w-4 mr-2" />
               {editing ? "Cancel" : "Edit"}
             </Button>
@@ -164,33 +165,33 @@ export default function PlayerProfilePage() {
               <Button onClick={handleUpdate}>Save Changes</Button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/10">
-                <CircleDot className="h-8 w-8 text-primary" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-primary/10">
+                <CircleDot className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Goals</p>
-                  <p className="text-2xl font-bold">{stats.goals}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Goals</p>
+                  <p className="text-xl sm:text-2xl font-bold">{stats.goals}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-purple-500/10">
-                <Footprints className="h-8 w-8 text-purple-500" />
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-purple-500/10">
+                <Footprints className="h-6 w-6 sm:h-8 sm:w-8 text-purple-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Assists</p>
-                  <p className="text-2xl font-bold">{stats.assists}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Assists</p>
+                  <p className="text-xl sm:text-2xl font-bold">{stats.assists}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-yellow-500/10">
-                <Trophy className="h-8 w-8 text-yellow-500" />
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-yellow-500/10">
+                <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">MOTM</p>
-                  <p className="text-2xl font-bold">{stats.motm}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">MOTM</p>
+                  <p className="text-xl sm:text-2xl font-bold">{stats.motm}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10">
-                <Shield className="h-8 w-8 text-blue-500" />
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-blue-500/10">
+                <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Clean Sheets</p>
-                  <p className="text-2xl font-bold">{stats.cleanSheets}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Clean Sheets</p>
+                  <p className="text-xl sm:text-2xl font-bold">{stats.cleanSheets}</p>
                 </div>
               </div>
             </div>
@@ -198,23 +199,23 @@ export default function PlayerProfilePage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Games Played</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Games Played</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.gamesPlayed}</div>
+            <div className="text-2xl sm:text-3xl font-bold">{stats.gamesPlayed}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Wins</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Wins</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.wins}</div>
-            <p className="text-sm text-muted-foreground mt-1">
+            <div className="text-2xl sm:text-3xl font-bold">{stats.wins}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               {stats.winPercentage}% win rate
             </p>
           </CardContent>
@@ -222,11 +223,11 @@ export default function PlayerProfilePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Contributions</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Contributions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{stats.goals + stats.assists}</div>
-            <p className="text-sm text-muted-foreground mt-1">
+            <div className="text-2xl sm:text-3xl font-bold">{stats.goals + stats.assists}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               Goals + Assists
             </p>
           </CardContent>

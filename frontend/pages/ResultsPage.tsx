@@ -172,19 +172,20 @@ export default function ResultsPage() {
   };
 
   return (
-    <div className="bg-[#0a1e3d] min-h-screen p-6">
+    <div className="bg-[#0a1e3d] min-h-screen p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-4xl font-bold mb-2 text-[#ffd700]">Game Results</h1>
-            <p className="text-gray-400">View match history and statistics</p>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-[#ffd700]">Game Results</h1>
+            <p className="text-sm sm:text-base text-gray-400">View match history and statistics</p>
           </div>
           <Button
             onClick={exportToCSV}
-            className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold"
+            className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold w-full sm:w-auto"
           >
             <Download className="h-4 w-4 mr-2" />
-            Export to CSV
+            <span className="hidden sm:inline">Export to CSV</span>
+            <span className="sm:hidden">Export CSV</span>
           </Button>
         </div>
 
@@ -197,29 +198,29 @@ export default function ResultsPage() {
             return (
               <Card key={game.id} className="bg-[#0f2847] border-[#1a3a5c]">
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div 
-                      className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+                      className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity w-full"
                       onClick={() => toggleGame(game.id)}
                     >
-                      <CardTitle className="flex items-center gap-4 text-white">
-                        <span className="text-gray-400 text-lg">{typeof game.date === 'string' ? game.date : new Date(game.date).toISOString().split('T')[0]}</span>
-                        <span className="text-3xl font-bold">
+                      <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white">
+                        <span className="text-gray-400 text-sm sm:text-base lg:text-lg">{typeof game.date === 'string' ? game.date : new Date(game.date).toISOString().split('T')[0]}</span>
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-bold">
                           <span className="text-white">Black</span> <span className="text-[#ffd700]">{game.blackScore}</span> - <span className="text-[#ffd700]">{game.whiteScore}</span> <span className="text-white">White</span>
                         </span>
                         {game.winner !== 'Draw' && (
-                          <span className="text-sm font-normal text-gray-400">
+                          <span className="text-xs sm:text-sm font-normal text-gray-400">
                             ({game.winner} wins)
                           </span>
                         )}
                         {game.winner === 'Draw' && (
-                          <span className="text-sm font-normal text-gray-400">
+                          <span className="text-xs sm:text-sm font-normal text-gray-400">
                             (Draw)
                           </span>
                         )}
                         {game.motmFinalized && game.motmPlayerName && (
-                          <span className="flex items-center gap-1 text-sm font-normal text-[#ffd700]">
-                            <Trophy className="h-4 w-4" />
+                          <span className="flex items-center gap-1 text-xs sm:text-sm font-normal text-[#ffd700]">
+                            <Trophy className="h-3 w-3 sm:h-4 sm:w-4" />
                             MOTM: {game.motmPlayerName}
                           </span>
                         )}
@@ -228,7 +229,7 @@ export default function ResultsPage() {
                     {userRole === 'manager' && (
                       <Link
                         to={`/modify-results/${game.id}`}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#1a3a5c] hover:bg-[#234a6f] text-[#ffd700] rounded-lg transition-colors"
+                        className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#1a3a5c] hover:bg-[#234a6f] text-[#ffd700] rounded-lg transition-colors w-full sm:w-auto justify-center"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Edit className="h-4 w-4" />
@@ -239,8 +240,8 @@ export default function ResultsPage() {
                 </CardHeader>
 
                 {isExpanded && details && (
-                  <CardContent className="space-y-6 pt-0">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <CardContent className="space-y-4 sm:space-y-6 pt-0">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                       <div>
                         <h3 className="text-lg font-semibold mb-3 text-[#ffd700]">Black Team</h3>
                         <div className="space-y-2">
@@ -324,35 +325,36 @@ export default function ResultsPage() {
 
                     {votes && votes.aggregate.length > 0 && (
                       <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-lg font-semibold flex items-center gap-2 text-[#ffd700]">
-                            <Trophy className="h-5 w-5" />
-                            Voting Results (Aggregated)
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+                          <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 text-[#ffd700]">
+                            <Trophy className="h-4 w-4 sm:h-5 sm:w-5" />
+                            Voting Results
                           </h3>
                           {userRole === 'manager' && !game.motmFinalized && (
                             <Button
                               onClick={() => finalizeVoting(game.id)}
                               disabled={finalizingGame === game.id}
-                              className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold"
+                              className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold w-full sm:w-auto"
+                              size="sm"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               {finalizingGame === game.id ? "Finalizing..." : "Finalize MOTM"}
                             </Button>
                           )}
                           {game.motmFinalized && (
-                            <span className="text-sm text-gray-400 italic">Finalized</span>
+                            <span className="text-xs sm:text-sm text-gray-400 italic">Finalized</span>
                           )}
                         </div>
                         <div className="space-y-2">
                           {votes.aggregate.map((vote, index) => (
-                            <div key={vote.playerId} className="flex items-center justify-between p-3 rounded-lg bg-[#1a3a5c]">
-                              <div className="flex items-center gap-3">
-                                <span className="text-2xl font-bold text-gray-400">
+                            <div key={vote.playerId} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 sm:p-3 rounded-lg bg-[#1a3a5c] gap-2">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <span className="text-lg sm:text-2xl font-bold text-gray-400">
                                   #{index + 1}
                                 </span>
-                                <span className="font-semibold text-white">{vote.playerName}</span>
+                                <span className="font-semibold text-white text-sm sm:text-base">{vote.playerName}</span>
                               </div>
-                              <div className="flex items-center gap-6 text-sm">
+                              <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm flex-wrap">
                                 <span className="text-gray-300">
                                   🥇 {vote.firstChoiceVotes}
                                 </span>
@@ -371,17 +373,17 @@ export default function ResultsPage() {
                         </div>
 
                         {votes.votes.length > 0 && (
-                          <div className="mt-6">
-                            <h4 className="text-sm font-semibold mb-2 text-gray-400">
+                          <div className="mt-4 sm:mt-6">
+                            <h4 className="text-xs sm:text-sm font-semibold mb-2 text-gray-400">
                               Individual Votes (Anonymous)
                             </h4>
-                            <p className="text-xs text-gray-500 mb-3">
-                              Votes are shown without voter identity for privacy
+                            <p className="text-xs text-gray-500 mb-2 sm:mb-3">
+                              Votes shown without voter identity
                             </p>
                             <div className="space-y-1">
                               {votes.votes.map((vote) => (
-                                <div key={vote.voteId} className="p-2 rounded bg-[#1a3a5c] text-sm">
-                                  <div className="flex items-center gap-2 text-gray-300">
+                                <div key={vote.voteId} className="p-2 rounded bg-[#1a3a5c] text-xs sm:text-sm">
+                                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-gray-300">
                                     <span className="font-medium">🥇 {vote.firstChoice}</span>
                                     {vote.secondChoice && (
                                       <>
