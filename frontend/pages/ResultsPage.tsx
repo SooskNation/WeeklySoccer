@@ -182,14 +182,6 @@ export default function ResultsPage() {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-[#ffd700]">Game Results</h1>
             <p className="text-sm sm:text-base text-gray-400">View match history and statistics</p>
           </div>
-          <Button
-            onClick={exportToCSV}
-            className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold w-full sm:w-auto"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Export to CSV</span>
-            <span className="sm:hidden">Export CSV</span>
-          </Button>
         </div>
 
         <div className="space-y-4">
@@ -413,6 +405,17 @@ export default function ResultsPage() {
               </Card>
             );
           })}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <Button
+            onClick={exportToCSV}
+            className="bg-[#ffd700] hover:bg-[#e6c200] text-[#0a1e3d] font-semibold w-full sm:w-auto"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Export to CSV</span>
+            <span className="sm:hidden">Export CSV</span>
+          </Button>
         </div>
       </div>
     </div>

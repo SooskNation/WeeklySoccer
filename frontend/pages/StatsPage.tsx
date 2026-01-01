@@ -160,14 +160,6 @@ export default function StatsPage() {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-[#ffd700]">Player Statistics</h1>
             <p className="text-sm sm:text-base text-gray-400">Complete leaderboard and player stats</p>
           </div>
-          <Button 
-            onClick={handleExportCSV}
-            className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e] font-semibold w-full sm:w-auto"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Export CSV</span>
-            <span className="sm:hidden">Export</span>
-          </Button>
         </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -382,6 +374,17 @@ export default function StatsPage() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="flex justify-center mt-6">
+        <Button 
+          onClick={handleExportCSV}
+          className="bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e] font-semibold w-full sm:w-auto"
+        >
+          <Download className="h-4 w-4 mr-2" />
+          <span className="hidden sm:inline">Export CSV</span>
+          <span className="sm:hidden">Export</span>
+        </Button>
+      </div>
       </div>
     </div>
   );
