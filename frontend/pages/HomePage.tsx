@@ -29,7 +29,7 @@ export default function HomePage() {
                 See the leaderboard, top scorers, and detailed player statistics
               </p>
               <Link to="/stats">
-                <Button className="w-full bg-[#ffd700] text-[#0a1e3d] hover:bg-[#ffed4e] font-bold">View Stats</Button>
+                <Button className="w-full bg-[#1a3a5c] text-white hover:bg-[#234a6f] font-bold border border-[#2a4a6c]">View Stats</Button>
               </Link>
             </CardContent>
           </Card>
