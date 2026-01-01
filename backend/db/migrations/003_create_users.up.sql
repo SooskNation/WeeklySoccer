@@ -7,5 +7,5 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (username, password, role) VALUES ('admin', 'admin', 'manager');
+INSERT INTO users (username, password, role) VALUES ('admin', 'Iman', 'manager');
 INSERT INTO users (username, password, role, player_id) VALUES ('player', 'player', 'player', 1);

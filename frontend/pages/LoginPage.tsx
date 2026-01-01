@@ -63,17 +63,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               Login
             </Button>
           </form>
-          <div className="mt-6 pt-6 border-t space-y-2">
-            <p className="text-sm text-muted-foreground font-semibold">Demo Credentials:</p>
-            <div className="space-y-1 text-sm">
-              <p className="text-muted-foreground">
-                <span className="font-medium">Manager:</span> admin / admin
-              </p>
-              <p className="text-muted-foreground">
-                <span className="font-medium">Player:</span> player / player
-              </p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
