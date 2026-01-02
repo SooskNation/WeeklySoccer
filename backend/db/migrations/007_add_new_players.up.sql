@@ -1,12 +1,5 @@
--- Add all players (original + new)
+-- Add new players
 INSERT INTO players (name, nickname, role_id) VALUES
-  ('Iman', 'Iman', 1),
-  ('Hamed', 'Hamed', 1),
-  ('Emad', 'Emad', 1),
-  ('Abe', 'Abe', 1),
-  ('Doc', 'Doc', 1),
-  ('Hesam', 'Hesam', 1),
-  ('Steve', 'Steve', 1),
   ('Sergio', 'Sergio', 1),
   ('Sebastian', 'Sebastian', 1),
   ('Juan', 'Juan', 1),
@@ -32,5 +25,4 @@ INSERT INTO players (name, nickname, role_id) VALUES
   ('Vini', 'Vini', 1),
   ('Sardar', 'Sardar', 1),
   ('John', 'John', 1),
-  ('Kevin', 'Kevin', 1)
-ON CONFLICT (name) DO NOTHING;
+  ('Kevin', 'Kevin', 1);
