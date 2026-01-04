@@ -267,6 +267,7 @@ export namespace players {
         public async update(params: RequestType<typeof api_players_update_update>): Promise<ResponseType<typeof api_players_update_update>> {
             // Construct the body with only the fields which we want encoded within the body (excluding query string or header fields)
             const body: Record<string, any> = {
+                name:           params.name,
                 nickname:       params.nickname,
                 profilePicture: params.profilePicture,
             }

@@ -3,6 +3,7 @@ import db from "../db";
 
 interface UpdatePlayerParams {
   id: number;
+  name?: string;
   nickname?: string;
   profilePicture?: string;
 }
@@ -17,7 +18,7 @@ interface Player {
 // Updates a player's profile.
 export const update = api<UpdatePlayerParams, Player>(
   { auth: true, expose: true, method: "PUT", path: "/players/:id" },
-  async ({ id, nickname, profilePicture }) => {
+  async ({ id, name, nickname, profilePicture }) => {
     const existing = await db.queryRow<{ player_id: number }>`
       SELECT player_id FROM players WHERE player_id = ${id}
     `;
@@ -28,7 +29,8 @@ export const update = api<UpdatePlayerParams, Player>(
 
     await db.exec`
       UPDATE players
-      SET nickname = COALESCE(${nickname}, nickname),
+      SET name = COALESCE(${name}, name),
+          nickname = COALESCE(${nickname}, nickname),
           profile_picture = COALESCE(${profilePicture}, profile_picture)
       WHERE player_id = ${id}
     `;
