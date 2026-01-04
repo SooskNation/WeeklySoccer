@@ -33,6 +33,7 @@ export default function PlayerProfilePage() {
   const [player, setPlayer] = useState<Player | null>(null);
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [editing, setEditing] = useState(false);
+  const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -53,6 +54,7 @@ export default function PlayerProfilePage() {
       ]);
       setPlayer(playerData);
       setStats(statsData);
+      setName(playerData.name);
       setNickname(playerData.nickname || "");
     } catch (error) {
       console.error("Failed to load player data:", error);
@@ -71,6 +73,7 @@ export default function PlayerProfilePage() {
       const backend = getAuthenticatedBackend();
       await backend.players.update({
         id: parseInt(id!),
+        name: name || undefined,
         nickname: nickname || undefined
       });
       toast({
@@ -153,6 +156,15 @@ export default function PlayerProfilePage() {
         <CardContent>
           {editing ? (
             <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter name"
+                />
+              </div>
               <div>
                 <Label htmlFor="nickname">Nickname</Label>
                 <Input
