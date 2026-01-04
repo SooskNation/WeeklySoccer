@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { Trash2, GripVertical, Shirt, Menu, X, HandHelping } from "lucide-react";
+import { Trash2, GripVertical, Shirt, Menu, X, HandHelping, AlertTriangle } from "lucide-react";
 import { useSubmitOnce } from "@/hooks/useSubmitOnce";
 
 interface Player {
@@ -59,6 +59,7 @@ export default function ModifyResultsPage() {
   const [loading, setLoading] = useState(true);
   const [draggedPlayer, setDraggedPlayer] = useState<number | null>(null);
   const [showPlayers, setShowPlayers] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -314,6 +315,29 @@ export default function ModifyResultsPage() {
 
   const [handleSubmit] = useSubmitOnce(updateGame);
 
+  const deleteGame = async () => {
+    try {
+      const backend = getAuthenticatedBackend();
+      await backend.games.deleteGame({ id: Number(gameId) });
+
+      toast({
+        title: "Success",
+        description: "Game deleted successfully",
+      });
+
+      navigate("/results");
+    } catch (error: any) {
+      console.error("Failed to delete game:", error);
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to delete game",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const [handleDelete] = useSubmitOnce(deleteGame);
+
   const availablePlayers = players.filter(
     p => !blackTeam.includes(p.id) && !whiteTeam.includes(p.id)
   );
@@ -568,6 +592,37 @@ export default function ModifyResultsPage() {
           </Card>
         </div>
 
+        {showDeleteConfirm && (
+          <Card className="bg-red-900/20 border-red-500">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <AlertTriangle className="h-6 w-6 text-red-500 flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-red-400 mb-2">Delete Game</h3>
+                  <p className="text-gray-300 mb-4">
+                    Are you sure you want to delete this game? This will permanently remove all game data,
+                    statistics, and votes. This action cannot be undone.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="flex-1 bg-gray-600 text-white hover:bg-gray-700"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleDelete}
+                      className="flex-1 bg-red-600 text-white hover:bg-red-700 font-bold"
+                    >
+                      Delete Game
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Button
             onClick={() => navigate("/results")}
@@ -575,6 +630,13 @@ export default function ModifyResultsPage() {
             size="lg"
           >
             Cancel
+          </Button>
+          <Button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="flex-1 bg-red-600 text-white hover:bg-red-700"
+            size="lg"
+          >
+            Delete Game
           </Button>
           <Button
             onClick={handleSubmit}

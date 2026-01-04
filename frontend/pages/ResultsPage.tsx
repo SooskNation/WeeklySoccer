@@ -29,7 +29,13 @@ interface PlayerStat {
   manOfMatch: boolean;
 }
 
-interface GameDetails extends Game {
+interface GameDetails {
+  id: number;
+  date: string;
+  blackScore: number;
+  whiteScore: number;
+  winner?: string;
+  motmFinalized: boolean;
   stats: PlayerStat[];
 }
 
@@ -103,7 +109,16 @@ export default function ResultsPage() {
           backend.games.get({ id: gameId }),
           backend.votes.allVotes({ gameId })
         ]);
-        setGameDetails(new Map(gameDetails.set(gameId, details)));
+        const gameDetailsData: GameDetails = {
+          id: details.id,
+          date: details.date,
+          blackScore: details.blackScore,
+          whiteScore: details.whiteScore,
+          winner: details.winner,
+          motmFinalized: details.motmFinalized,
+          stats: details.stats
+        };
+        setGameDetails(new Map(gameDetails.set(gameId, gameDetailsData)));
         setVoteResults(new Map(voteResults.set(gameId, votes)));
       } catch (error) {
         console.error("Failed to load game details:", error);
@@ -131,7 +146,16 @@ export default function ResultsPage() {
         backend.games.get({ id: gameId }),
         backend.games.list()
       ]);
-      setGameDetails(new Map(gameDetails.set(gameId, details)));
+      const gameDetailsData: GameDetails = {
+        id: details.id,
+        date: details.date,
+        blackScore: details.blackScore,
+        whiteScore: details.whiteScore,
+        winner: details.winner,
+        motmFinalized: details.motmFinalized,
+        stats: details.stats
+      };
+      setGameDetails(new Map(gameDetails.set(gameId, gameDetailsData)));
       setGames(updatedGames.games);
     } catch (error) {
       console.error("Failed to finalize voting:", error);
