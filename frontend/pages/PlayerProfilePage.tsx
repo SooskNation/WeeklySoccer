@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getAuthenticatedBackend } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CircleDot, Footprints, Shield, Trophy, Download, Edit } from "lucide-react";
+import { CircleDot, Footprints, Shield, Trophy, Download, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface PlayerStats {
@@ -30,12 +30,14 @@ interface Player {
 
 export default function PlayerProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [player, setPlayer] = useState<Player | null>(null);
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -89,6 +91,32 @@ export default function PlayerProfilePage() {
         description: "Failed to update profile",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete ${player?.name}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      const backend = getAuthenticatedBackend();
+      await backend.players.deletePlayer({ id: parseInt(id!) });
+      toast({
+        title: "Success",
+        description: "Player deleted successfully",
+      });
+      navigate("/stats");
+    } catch (error) {
+      console.error("Failed to delete player:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete player",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -150,6 +178,16 @@ export default function PlayerProfilePage() {
             <Button onClick={() => setEditing(!editing)} variant="outline" size="sm" className="flex-1 sm:flex-none">
               <Edit className="h-4 w-4 mr-2" />
               {editing ? "Cancel" : "Edit"}
+            </Button>
+            <Button 
+              onClick={handleDelete} 
+              variant="destructive" 
+              size="sm" 
+              className="flex-1 sm:flex-none"
+              disabled={deleting}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {deleting ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </CardHeader>

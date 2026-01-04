@@ -217,6 +217,7 @@ export namespace games {
  * Import the endpoint handlers to derive the types for the client.
  */
 import { create as api_players_create_create } from "~backend/players/create";
+import { deletePlayer as api_players_delete_deletePlayer } from "~backend/players/delete";
 import { get as api_players_get_get } from "~backend/players/get";
 import { list as api_players_list_list } from "~backend/players/list";
 import { update as api_players_update_update } from "~backend/players/update";
@@ -229,6 +230,7 @@ export namespace players {
         constructor(baseClient: BaseClient) {
             this.baseClient = baseClient
             this.create = this.create.bind(this)
+            this.deletePlayer = this.deletePlayer.bind(this)
             this.get = this.get.bind(this)
             this.list = this.list.bind(this)
             this.update = this.update.bind(this)
@@ -241,6 +243,12 @@ export namespace players {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI(`/players`, {method: "POST", body: JSON.stringify(params)})
             return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_players_create_create>
+        }
+
+        public async deletePlayer(params: { id: number }): Promise<ResponseType<typeof api_players_delete_deletePlayer>> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI(`/players/${encodeURIComponent(params.id)}`, {method: "DELETE", body: undefined})
+            return JSON.parse(await resp.text(), dateReviver) as ResponseType<typeof api_players_delete_deletePlayer>
         }
 
         /**
